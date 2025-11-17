@@ -71,7 +71,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('age');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -87,7 +87,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -103,7 +103,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -119,7 +119,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('array');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -135,7 +135,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('object');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -151,7 +151,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('boolean');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -168,7 +168,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('integer');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -185,7 +185,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('string');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -201,7 +201,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('array');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -221,7 +221,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     // ========================================
@@ -241,7 +241,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -257,7 +257,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -273,7 +273,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('minLength');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -290,7 +290,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -306,7 +306,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('required');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     // ========================================
@@ -326,7 +326,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('extraField');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -343,7 +343,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('created_at');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -359,7 +359,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('volume');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -376,7 +376,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('additional');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -396,7 +396,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('nam');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     // ========================================
@@ -416,7 +416,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('email');
 
-        Validator::validateRequest($json, $this->simpleCrudSpec);
+        Validator::validateRequest($json, $this->simpleCrudSpec, '/users', 'post');
     }
 
     /**
@@ -432,7 +432,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('uuid');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -449,7 +449,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('date-time');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -466,7 +466,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('date');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -482,7 +482,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('uri');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -498,7 +498,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('uri-reference');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -514,7 +514,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('hostname');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -530,7 +530,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('ipv4');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -546,7 +546,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('ipv6');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -562,7 +562,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('phone');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     // ========================================
@@ -582,7 +582,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(EnumViolationException::class);
         $this->expectExceptionMessage('pending');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -598,7 +598,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(EnumViolationException::class);
         $this->expectExceptionMessage('Active');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -614,7 +614,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('integer');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -630,7 +630,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -646,7 +646,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(EnumViolationException::class);
         $this->expectExceptionMessage('empty');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     // ========================================
@@ -666,7 +666,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minimum');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -682,7 +682,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maximum');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -698,7 +698,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('exclusiveMinimum');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -714,7 +714,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('exclusiveMaximum');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -730,7 +730,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minLength');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -746,7 +746,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maxLength');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -762,7 +762,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minItems');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -778,7 +778,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maxItems');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -794,7 +794,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('multipleOf');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -810,7 +810,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('uniqueItems');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     // ========================================
@@ -830,7 +830,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('pattern');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -846,7 +846,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('phone');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -862,7 +862,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('hex');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -878,7 +878,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('alphanumeric');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     /**
@@ -894,7 +894,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('email');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec);
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
     }
 
     // ========================================
@@ -914,7 +914,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('oneOf');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -930,7 +930,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('multiple');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -946,7 +946,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('anyOf');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -962,7 +962,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('allOf');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -978,7 +978,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('allOf');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -994,7 +994,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('ambiguous');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -1010,7 +1010,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('nested');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -1026,7 +1026,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('additional');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     // ========================================
@@ -1046,7 +1046,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(DiscriminatorViolationException::class);
         $this->expectExceptionMessage('missing');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -1062,7 +1062,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(DiscriminatorViolationException::class);
         $this->expectExceptionMessage('bird');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     /**
@@ -1078,7 +1078,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(DiscriminatorViolationException::class);
         $this->expectExceptionMessage('case');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 
     // ========================================
@@ -1098,7 +1098,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('5');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -1114,7 +1114,7 @@ final class RequestValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('10');
 
-        Validator::validateRequest($json, $this->strictSchemasSpec);
+        Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
 
     /**
@@ -1130,6 +1130,6 @@ final class RequestValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('cascading');
 
-        Validator::validateRequest($json, $this->compositionSpec);
+        Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
 }

@@ -69,7 +69,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('age');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -85,7 +85,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -101,7 +101,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -117,7 +117,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('array');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -133,7 +133,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('object');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -149,7 +149,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('boolean');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -166,7 +166,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('integer');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -183,7 +183,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('string');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -199,7 +199,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('array');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -219,7 +219,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     // ========================================
@@ -239,7 +239,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -255,7 +255,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('null');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -271,7 +271,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('minLength');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -288,7 +288,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('name');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -304,7 +304,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(RequiredFieldMissingException::class);
         $this->expectExceptionMessage('required');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     // ========================================
@@ -324,7 +324,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('extraField');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -341,7 +341,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('created_at');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -357,7 +357,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('volume');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -374,7 +374,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('additional');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -394,7 +394,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(AdditionalPropertyException::class);
         $this->expectExceptionMessage('nam');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     // ========================================
@@ -414,7 +414,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('email');
 
-        Validator::validateResponse($json, $this->simpleCrudSpec);
+        Validator::validateResponse($json, $this->simpleCrudSpec, '/users', 'post', 201);
     }
 
     /**
@@ -430,7 +430,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('uuid');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -447,7 +447,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('date-time');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -463,7 +463,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('uri');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -479,7 +479,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('hostname');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -495,7 +495,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('ipv4');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -511,7 +511,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('ipv6');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -528,7 +528,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(FormatViolationException::class);
         $this->expectExceptionMessage('date');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     // ========================================
@@ -548,7 +548,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(EnumViolationException::class);
         $this->expectExceptionMessage('pending');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -564,7 +564,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(EnumViolationException::class);
         $this->expectExceptionMessage('Active');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -580,7 +580,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('integer');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     // ========================================
@@ -600,7 +600,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minimum');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -616,7 +616,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maximum');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -632,7 +632,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minLength');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -648,7 +648,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maxLength');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -664,7 +664,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('minItems');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -680,7 +680,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('maxItems');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     // ========================================
@@ -700,7 +700,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('oneOf');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 
     /**
@@ -716,7 +716,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('multiple');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 
     /**
@@ -732,7 +732,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('anyOf');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 
     /**
@@ -748,7 +748,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('allOf');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 
     /**
@@ -764,7 +764,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(CompositionViolationException::class);
         $this->expectExceptionMessage('allOf');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 
     // ========================================
@@ -784,7 +784,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('5');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -800,7 +800,7 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('10');
 
-        Validator::validateResponse($json, $this->strictSchemasSpec);
+        Validator::validateResponse($json, $this->strictSchemasSpec, '/products', 'post', 201);
     }
 
     /**
@@ -816,6 +816,6 @@ final class ResponseValidationTest extends TestCase
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('cascading');
 
-        Validator::validateResponse($json, $this->compositionSpec);
+        Validator::validateResponse($json, $this->compositionSpec, '/pets', 'post', 201);
     }
 }
