@@ -81,7 +81,7 @@ final readonly class Spec
     ];
 
     /**
-     * @param array<mixed> $spec The OpenAPI specification array
+     * @param array<string, mixed> $spec The OpenAPI specification array
      * @param string $sourceFile The source file path (for error reporting)
      */
     private function __construct(
@@ -130,7 +130,7 @@ final readonly class Spec
         }
 
         // Parse JSON
-        /** @var array<mixed> $spec */
+        /** @var array<string, mixed> $spec */
         $spec = json_decode($content, true);
 
         return new self($spec, $path);
@@ -139,7 +139,7 @@ final readonly class Spec
     /**
      * Create a Spec instance from an array.
      *
-     * @param array<mixed> $spec The OpenAPI specification as an array
+     * @param array<string, mixed> $spec The OpenAPI specification as an array
      *
      * @return self
      */
@@ -151,7 +151,7 @@ final readonly class Spec
     /**
      * Get the OpenAPI specification array.
      *
-     * @return array<mixed>
+     * @return array<string, mixed>
      */
     public function getSpec(): array
     {
@@ -373,7 +373,7 @@ final readonly class Spec
     /**
      * Validate paths object.
      *
-     * @param array<mixed> $paths
+     * @param array<string, mixed> $paths
      * @param ValidationError[] $errors
      */
     private function validatePaths(array $paths, array &$errors): void
@@ -588,7 +588,7 @@ final readonly class Spec
     /**
      * Validate a JSON schema.
      *
-     * @param array<mixed> $schema
+     * @param array<string, mixed> $schema
      * @param string $path
      * @param ValidationError[] $errors
      */

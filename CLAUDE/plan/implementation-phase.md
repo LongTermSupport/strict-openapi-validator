@@ -8,8 +8,8 @@
 
 ## Progress
 
-[ ] Phase 1: Spec Validation Implementation
-[ ] Phase 2: Schema Validation Core
+[✓] Phase 1: Spec Validation Implementation (COMPLETE - 31 tests pass)
+[⏳] Phase 2: Schema Validation Core (IN PROGRESS)
 [ ] Phase 3: Schema Validation Extended
 [ ] Phase 4: Composition Validation
 [ ] Phase 5: Request/Response Validation
