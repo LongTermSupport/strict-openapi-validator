@@ -1,3 +1,6 @@
 {
-  "name": "Buddy"
+  "petType": "dog",
+  "name": "Buddy",
+  "breed": "labrador",
+  "indoor": true
 }

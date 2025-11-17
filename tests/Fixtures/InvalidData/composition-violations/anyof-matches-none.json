@@ -1,5 +1,3 @@
 {
-  "petType": "bird",
-  "name": "Tweety",
-  "wingspan": 20
+  "invalidKey": "This doesn't match any of the allowed schemas"
 }
