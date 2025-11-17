@@ -10,10 +10,13 @@ use LongTermSupport\StrictOpenApiValidator\Exception\CompositionViolationExcepti
 use LongTermSupport\StrictOpenApiValidator\Exception\DiscriminatorViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\EnumViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\FormatViolationException;
+use LongTermSupport\StrictOpenApiValidator\Exception\InvalidRequestPathException;
+use LongTermSupport\StrictOpenApiValidator\Exception\InvalidResponseStatusException;
 use LongTermSupport\StrictOpenApiValidator\Exception\PatternViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\RequiredFieldMissingException;
 use LongTermSupport\StrictOpenApiValidator\Exception\SchemaViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\TypeMismatchException;
+use LongTermSupport\StrictOpenApiValidator\Exception\ValidationError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,11 +35,12 @@ final readonly class Validator
     /**
      * Validate a JSON request string against the OpenAPI spec.
      *
-     * Phase 2: Validates against first requestBody schema found in spec.
-     * Phase 5 will add proper path/method matching.
+     * Phase 5: Supports both backward-compatible (first schema) and path/method matching.
      *
      * @param string $json JSON request body to validate
      * @param Spec $spec OpenAPI specification to validate against
+     * @param string $path Request path (e.g., "/users", "/users/{id}") - empty uses first schema
+     * @param string $method HTTP method (e.g., "post", "get") - empty uses first schema
      *
      * @return void
      * @throws TypeMismatchException When type validation fails
@@ -46,14 +50,20 @@ final readonly class Validator
      * @throws BoundaryViolationException When boundary constraints are violated
      * @throws PatternViolationException When pattern validation fails
      * @throws SchemaViolationException When multiple validation errors occur
+     * @throws InvalidRequestPathException When path/method not found in spec
      */
-    public static function validateRequest(string $json, Spec $spec): void
+    public static function validateRequest(string $json, Spec $spec, string $path = '', string $method = ''): void
     {
         // Parse JSON (returns mixed, validated before use)
         $data = \Safe\json_decode($json, true);
 
-        // Find first request body schema in spec
-        $schema = self::findFirstRequestBodySchema($spec);
+        // Backward compatibility: if path/method not provided, use first schema
+        if ('' === $path || '' === $method) {
+            $schema = self::findFirstRequestBodySchema($spec);
+        } else {
+            // New behavior: find exact schema for path/method
+            $schema = self::findRequestBodySchema($spec, $path, $method);
+        }
 
         if ([] === $schema) {
             // No schema found - nothing to validate
@@ -71,11 +81,13 @@ final readonly class Validator
     /**
      * Validate a JSON response string against the OpenAPI spec.
      *
-     * Phase 2: Validates against first response schema found in spec.
-     * Phase 5 will add proper path/method/status matching.
+     * Phase 5: Supports both backward-compatible (first schema) and path/method/status matching.
      *
      * @param string $json JSON response body to validate
      * @param Spec $spec OpenAPI specification to validate against
+     * @param string $path Response path (e.g., "/users/{id}") - empty uses first schema
+     * @param string $method HTTP method (e.g., "get", "post") - empty uses first schema
+     * @param int $statusCode HTTP status code (e.g., 200, 404) - 0 uses first schema
      *
      * @return void
      * @throws TypeMismatchException When type validation fails
@@ -85,14 +97,20 @@ final readonly class Validator
      * @throws BoundaryViolationException When boundary constraints are violated
      * @throws PatternViolationException When pattern validation fails
      * @throws SchemaViolationException When multiple validation errors occur
+     * @throws InvalidResponseStatusException When status code not found in spec
      */
-    public static function validateResponse(string $json, Spec $spec): void
+    public static function validateResponse(string $json, Spec $spec, string $path = '', string $method = '', int $statusCode = 0): void
     {
         // Parse JSON (returns mixed, validated before use)
         $data = \Safe\json_decode($json, true);
 
-        // Find first response schema in spec
-        $schema = self::findFirstResponseSchema($spec);
+        // Backward compatibility: if path/method/status not provided, use first schema
+        if ('' === $path || '' === $method || 0 === $statusCode) {
+            $schema = self::findFirstResponseSchema($spec);
+        } else {
+            // New behavior: find exact schema for path/method/status
+            $schema = self::findResponseSchema($spec, $path, $method, $statusCode);
+        }
 
         if ([] === $schema) {
             // No schema found - nothing to validate
@@ -250,6 +268,305 @@ final readonly class Validator
         }
 
         return [];
+    }
+
+    /**
+     * Find request body schema for specific path and method.
+     *
+     * Phase 5: Proper path/method matching with support for path parameters.
+     *
+     * @param Spec $spec OpenAPI specification
+     * @param string $path Request path (e.g., "/users", "/users/123")
+     * @param string $method HTTP method (lowercase, e.g., "post", "get")
+     *
+     * @return array<string, mixed>
+     * @throws InvalidRequestPathException When path/method not found in spec
+     */
+    private static function findRequestBodySchema(Spec $spec, string $path, string $method): array
+    {
+        $specArray = $spec->getSpec();
+
+        if (!isset($specArray['paths']) || !\is_array($specArray['paths'])) {
+            throw new InvalidRequestPathException([
+                new ValidationError(
+                    path: '$.path',
+                    specReference: '#/paths',
+                    constraint: 'path',
+                    expectedValue: 'valid path in spec',
+                    receivedValue: $path,
+                    reason: 'No paths defined in OpenAPI spec',
+                    hint: 'OpenAPI spec must define at least one path'
+                ),
+            ]);
+        }
+
+        // Normalize method to lowercase
+        $method = \strtolower($method);
+
+        // Try exact path match first
+        if (isset($specArray['paths'][$path])) {
+            $pathItem = $specArray['paths'][$path];
+            if (\is_array($pathItem) && isset($pathItem[$method])) {
+                $operation = $pathItem[$method];
+                if (\is_array($operation)) {
+                    $schema = self::extractRequestBodySchema($operation);
+                    if ([] !== $schema) {
+                        return $schema;
+                    }
+                }
+            }
+        }
+
+        // Try path parameter matching (e.g., /users/{id} matches /users/123)
+        foreach ($specArray['paths'] as $specPath => $pathItem) {
+            if (!\is_array($pathItem)) {
+                continue;
+            }
+
+            // Convert path template to regex
+            if (self::pathMatches($specPath, $path)) {
+                if (isset($pathItem[$method])) {
+                    $operation = $pathItem[$method];
+                    if (\is_array($operation)) {
+                        $schema = self::extractRequestBodySchema($operation);
+                        if ([] !== $schema) {
+                            return $schema;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Path/method not found - throw exception with helpful message
+        $availablePaths = \array_keys($specArray['paths']);
+        throw new InvalidRequestPathException([
+            new ValidationError(
+                path: '$.path',
+                specReference: '#/paths',
+                constraint: 'path',
+                expectedValue: 'valid path in spec',
+                receivedValue: $path . ' [' . $method . ']',
+                reason: \sprintf('Path "%s" with method "%s" not found in OpenAPI spec', $path, $method),
+                hint: 'Available paths: ' . \implode(', ', $availablePaths)
+            ),
+        ]);
+    }
+
+    /**
+     * Find response schema for specific path, method, and status code.
+     *
+     * Phase 5: Proper path/method/status matching with fallback to 'default'.
+     *
+     * @param Spec $spec OpenAPI specification
+     * @param string $path Response path (e.g., "/users/{id}")
+     * @param string $method HTTP method (lowercase, e.g., "get", "post")
+     * @param int $statusCode HTTP status code (e.g., 200, 404)
+     *
+     * @return array<string, mixed>
+     * @throws InvalidResponseStatusException When status code not found in spec
+     */
+    private static function findResponseSchema(Spec $spec, string $path, string $method, int $statusCode): array
+    {
+        $specArray = $spec->getSpec();
+
+        if (!isset($specArray['paths']) || !\is_array($specArray['paths'])) {
+            throw new InvalidResponseStatusException([
+                new ValidationError(
+                    path: '$.path',
+                    specReference: '#/paths',
+                    constraint: 'path',
+                    expectedValue: 'valid path in spec',
+                    receivedValue: $path,
+                    reason: 'No paths defined in OpenAPI spec',
+                    hint: 'OpenAPI spec must define at least one path'
+                ),
+            ]);
+        }
+
+        // Normalize method to lowercase
+        $method = \strtolower($method);
+        $statusCodeStr = (string)$statusCode;
+
+        // Try exact path match first
+        if (isset($specArray['paths'][$path])) {
+            $pathItem = $specArray['paths'][$path];
+            if (\is_array($pathItem) && isset($pathItem[$method])) {
+                $operation = $pathItem[$method];
+                if (\is_array($operation)) {
+                    $schema = self::extractResponseSchema($operation, $statusCodeStr);
+                    if ([] !== $schema) {
+                        return $schema;
+                    }
+                }
+            }
+        }
+
+        // Try path parameter matching (e.g., /users/{id} matches /users/123)
+        foreach ($specArray['paths'] as $specPath => $pathItem) {
+            if (!\is_array($pathItem)) {
+                continue;
+            }
+
+            // Convert path template to regex
+            if (self::pathMatches($specPath, $path)) {
+                if (isset($pathItem[$method])) {
+                    $operation = $pathItem[$method];
+                    if (\is_array($operation)) {
+                        $schema = self::extractResponseSchema($operation, $statusCodeStr);
+                        if ([] !== $schema) {
+                            return $schema;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Path/method/status not found - throw exception with helpful message
+        $availablePaths = \array_keys($specArray['paths']);
+        throw new InvalidResponseStatusException([
+            new ValidationError(
+                path: '$.path',
+                specReference: '#/paths',
+                constraint: 'status',
+                expectedValue: 'valid status code in spec',
+                receivedValue: $path . ' [' . $method . '] [' . $statusCode . ']',
+                reason: \sprintf('Path "%s" with method "%s" and status code %d not found in OpenAPI spec', $path, $method, $statusCode),
+                hint: 'Available paths: ' . \implode(', ', $availablePaths)
+            ),
+        ]);
+    }
+
+    /**
+     * Extract request body schema from operation.
+     *
+     * @param array<string, mixed> $operation Operation object from spec
+     *
+     * @return array<string, mixed>
+     */
+    private static function extractRequestBodySchema(array $operation): array
+    {
+        if (!isset($operation['requestBody']) || !\is_array($operation['requestBody'])) {
+            return [];
+        }
+
+        $requestBody = $operation['requestBody'];
+        if (!isset($requestBody['content']) || !\is_array($requestBody['content'])) {
+            return [];
+        }
+
+        $content = $requestBody['content'];
+        if (!isset($content['application/json']) || !\is_array($content['application/json'])) {
+            return [];
+        }
+
+        $jsonContent = $content['application/json'];
+        if (!isset($jsonContent['schema']) || !\is_array($jsonContent['schema'])) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $schema */
+        $schema = $jsonContent['schema'];
+        return $schema;
+    }
+
+    /**
+     * Extract response schema from operation for specific status code.
+     *
+     * @param array<string, mixed> $operation Operation object from spec
+     * @param string $statusCode Status code as string (e.g., "200", "404")
+     *
+     * @return array<string, mixed>
+     */
+    private static function extractResponseSchema(array $operation, string $statusCode): array
+    {
+        if (!isset($operation['responses']) || !\is_array($operation['responses'])) {
+            return [];
+        }
+
+        $responses = $operation['responses'];
+
+        // Try exact status code match first
+        if (isset($responses[$statusCode]) && \is_array($responses[$statusCode])) {
+            $response = $responses[$statusCode];
+            $schema = self::extractSchemaFromResponse($response);
+            if ([] !== $schema) {
+                return $schema;
+            }
+        }
+
+        // Try 'default' response as fallback
+        if (isset($responses['default']) && \is_array($responses['default'])) {
+            $response = $responses['default'];
+            $schema = self::extractSchemaFromResponse($response);
+            if ([] !== $schema) {
+                return $schema;
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Extract schema from response object.
+     *
+     * @param array<string, mixed> $response Response object from spec
+     *
+     * @return array<string, mixed>
+     */
+    private static function extractSchemaFromResponse(array $response): array
+    {
+        if (!isset($response['content']) || !\is_array($response['content'])) {
+            return [];
+        }
+
+        $content = $response['content'];
+        if (!isset($content['application/json']) || !\is_array($content['application/json'])) {
+            return [];
+        }
+
+        $jsonContent = $content['application/json'];
+        if (!isset($jsonContent['schema']) || !\is_array($jsonContent['schema'])) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $schema */
+        $schema = $jsonContent['schema'];
+        return $schema;
+    }
+
+    /**
+     * Check if a path matches a path template.
+     *
+     * Converts OpenAPI path templates (e.g., /users/{id}) to regex
+     * and matches against actual paths (e.g., /users/123).
+     *
+     * @param string $template Path template from spec (e.g., "/users/{id}")
+     * @param string $path Actual path to match (e.g., "/users/123")
+     *
+     * @return bool True if path matches template
+     */
+    private static function pathMatches(string $template, string $path): bool
+    {
+        // If no parameters, must be exact match
+        if (!\str_contains($template, '{')) {
+            return $template === $path;
+        }
+
+        // Convert template to regex pattern
+        // /users/{id} becomes /users/([^/]+)
+        // /users/{id}/posts/{postId} becomes /users/([^/]+)/posts/([^/]+)
+        $pattern = \preg_replace('/\{[^}]+\}/', '([^/]+)', $template);
+        if (null === $pattern) {
+            return false;
+        }
+
+        // Escape forward slashes for regex
+        $pattern = \str_replace('/', '\\/', $pattern);
+
+        // Add anchors
+        $pattern = '/^' . $pattern . '$/';
+
+        return 1 === \preg_match($pattern, $path);
     }
 
     /**
