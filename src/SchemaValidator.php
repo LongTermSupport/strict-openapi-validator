@@ -323,18 +323,84 @@ final readonly class SchemaValidator
             return;
         }
 
+        // Empty enum array is a spec error, but we'll allow validation to continue
+        if ([] === $schema['enum']) {
+            return;
+        }
+
         // Use strict comparison (no type coercion)
+        // This handles null values correctly - if enum contains null, null will match
         if (!\in_array($data, $schema['enum'], true)) {
+            // Format enum values for display
+            $validValues = \array_map('json_encode', $schema['enum']);
+            $validValuesStr = \implode(', ', $validValues);
+
+            // Provide helpful hint for common mistakes
+            $hint = self::getEnumHint($data, $schema['enum']);
+
             $errors->addError(new ValidationError(
                 path: $path,
                 specReference: '#/schema/enum',
                 constraint: 'enum',
-                expectedValue: \implode(', ', \array_map('json_encode', $schema['enum'])),
+                expectedValue: "one of: {$validValuesStr}",
                 receivedValue: \json_encode($data),
-                reason: \sprintf('Value must be one of: %s', \implode(', ', \array_map('json_encode', $schema['enum']))),
-                hint: null
+                reason: \sprintf('Value %s is not in enum. Valid values: %s', \json_encode($data), $validValuesStr),
+                hint: $hint
             ));
         }
+    }
+
+    /**
+     * Get helpful hint for enum validation failures.
+     *
+     * Provides suggestions for common mistakes:
+     * - Case mismatch ("Active" vs "active")
+     * - Type mismatch (1 vs "1")
+     * - Similar values (typos)
+     *
+     * @param array<int, mixed> $enumValues
+     */
+    private static function getEnumHint(mixed $data, array $enumValues): ?string
+    {
+        // Check for case mismatch (only for strings)
+        if (\is_string($data)) {
+            foreach ($enumValues as $validValue) {
+                if (\is_string($validValue) && \strcasecmp($data, $validValue) === 0) {
+                    return "Did you mean '{$validValue}'? (case-sensitive comparison)";
+                }
+            }
+        }
+
+        // Check for type mismatch with string representation
+        $dataStr = (string)$data;
+        foreach ($enumValues as $validValue) {
+            if (\is_string($validValue) && $validValue === $dataStr && !\is_string($data)) {
+                return "Did you mean \"{$validValue}\" (string)? Received " . \get_debug_type($data);
+            }
+        }
+
+        // Check for numeric type mismatch
+        if (\is_numeric($data)) {
+            foreach ($enumValues as $validValue) {
+                if (\is_numeric($validValue) && (float)$data === (float)$validValue) {
+                    $dataType = \get_debug_type($data);
+                    $validType = \get_debug_type($validValue);
+                    if ($dataType !== $validType) {
+                        return "Did you mean {$validValue} ({$validType})? Received {$dataType}";
+                    }
+                }
+            }
+        }
+
+        // Check for null vs empty string confusion
+        if (null === $data && \in_array('', $enumValues, true)) {
+            return 'Did you mean "" (empty string)? null is not in enum';
+        }
+        if ('' === $data && \in_array(null, $enumValues, true)) {
+            return 'Did you mean null? Empty string is not in enum';
+        }
+
+        return null;
     }
 
     /**
