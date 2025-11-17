@@ -80,6 +80,17 @@ final readonly class SchemaValidator
                 self::validate($item, $schema['items'], "{$path}[{$index}]", $errors, $spec);
             }
         }
+
+        // Composition validation (oneOf, anyOf, allOf)
+        if (isset($schema['oneOf'])) {
+            self::validateOneOf($data, $schema, $path, $spec, $errors);
+        }
+        if (isset($schema['anyOf'])) {
+            self::validateAnyOf($data, $schema, $path, $spec, $errors);
+        }
+        if (isset($schema['allOf'])) {
+            self::validateAllOf($data, $schema, $path, $spec, $errors);
+        }
     }
 
     /**
@@ -507,5 +518,249 @@ final readonly class SchemaValidator
         }
 
         return null;
+    }
+
+    /**
+     * Validate oneOf constraint.
+     *
+     * Data must match EXACTLY ONE schema from the list.
+     * If discriminator is present, use it to select schema.
+     *
+     * @param array<string, mixed> $schema
+     * @param array<string, mixed> $spec
+     */
+    private static function validateOneOf(mixed $data, array $schema, string $path, array $spec, ErrorCollector $errors): void
+    {
+        if (!\is_array($schema['oneOf']) || [] === $schema['oneOf']) {
+            return;
+        }
+
+        // Handle discriminator if present and can be used
+        if (isset($schema['discriminator']) && \is_array($schema['discriminator'])) {
+            $discriminatorUsed = self::handleDiscriminator($data, $schema, $path, $spec, $errors);
+
+            // If discriminator was successfully used, we're done
+            if ($discriminatorUsed) {
+                return;
+            }
+            // Otherwise, fall through to regular oneOf validation
+        }
+
+        // Try each schema and collect matches/errors
+        $matchCount = 0;
+        $allSchemaErrors = [];
+
+        foreach ($schema['oneOf'] as $index => $subSchema) {
+            if (!\is_array($subSchema)) {
+                continue;
+            }
+
+            // Resolve $ref if present
+            if (isset($subSchema['$ref']) && \is_string($subSchema['$ref'])) {
+                $subSchema = self::resolveRef($subSchema['$ref'], $spec);
+            }
+
+            // Create temporary error collector for this schema
+            $schemaErrors = new ErrorCollector();
+            self::validate($data, $subSchema, $path, $schemaErrors, $spec);
+
+            if (!$schemaErrors->hasErrors()) {
+                $matchCount++;
+            } else {
+                $allSchemaErrors[$index] = $schemaErrors->getErrors();
+            }
+        }
+
+        // oneOf requires EXACTLY one match
+        if (0 === $matchCount) {
+            $errors->addError(new ValidationError(
+                path: $path,
+                specReference: '#/schema/oneOf',
+                constraint: 'oneOf',
+                expectedValue: 'data must match exactly one schema',
+                receivedValue: 'matches none',
+                reason: \sprintf('oneOf validation failed: data matches 0 schemas (must match exactly 1)'),
+                hint: 'Check that data conforms to at least one of the allowed schemas'
+            ));
+        } elseif ($matchCount > 1) {
+            $errors->addError(new ValidationError(
+                path: $path,
+                specReference: '#/schema/oneOf',
+                constraint: 'oneOf',
+                expectedValue: 'data must match exactly one schema',
+                receivedValue: \sprintf('matches %d schemas', $matchCount),
+                reason: \sprintf('oneOf validation failed: data matches %d schemas (must match exactly 1)', $matchCount),
+                hint: 'Data is ambiguous - it matches multiple schemas. Consider adding a discriminator field.'
+            ));
+        }
+    }
+
+    /**
+     * Validate anyOf constraint.
+     *
+     * Data must match AT LEAST ONE schema from the list.
+     *
+     * @param array<string, mixed> $schema
+     * @param array<string, mixed> $spec
+     */
+    private static function validateAnyOf(mixed $data, array $schema, string $path, array $spec, ErrorCollector $errors): void
+    {
+        if (!\is_array($schema['anyOf']) || [] === $schema['anyOf']) {
+            return;
+        }
+
+        // Try each schema
+        $matchFound = false;
+
+        foreach ($schema['anyOf'] as $subSchema) {
+            if (!\is_array($subSchema)) {
+                continue;
+            }
+
+            // Resolve $ref if present
+            if (isset($subSchema['$ref']) && \is_string($subSchema['$ref'])) {
+                $subSchema = self::resolveRef($subSchema['$ref'], $spec);
+            }
+
+            // Create temporary error collector for this schema
+            $schemaErrors = new ErrorCollector();
+            self::validate($data, $subSchema, $path, $schemaErrors, $spec);
+
+            if (!$schemaErrors->hasErrors()) {
+                $matchFound = true;
+                break; // At least one match is enough for anyOf
+            }
+        }
+
+        // anyOf requires at least one match
+        if (!$matchFound) {
+            $errors->addError(new ValidationError(
+                path: $path,
+                specReference: '#/schema/anyOf',
+                constraint: 'anyOf',
+                expectedValue: 'data must match at least one schema',
+                receivedValue: 'matches none',
+                reason: 'anyOf validation failed: data matches 0 schemas (must match at least 1)',
+                hint: 'Check that data conforms to at least one of the allowed schemas'
+            ));
+        }
+    }
+
+    /**
+     * Validate allOf constraint.
+     *
+     * Data must match ALL schemas from the list.
+     *
+     * @param array<string, mixed> $schema
+     * @param array<string, mixed> $spec
+     */
+    private static function validateAllOf(mixed $data, array $schema, string $path, array $spec, ErrorCollector $errors): void
+    {
+        if (!\is_array($schema['allOf']) || [] === $schema['allOf']) {
+            return;
+        }
+
+        // Validate against each schema
+        foreach ($schema['allOf'] as $subSchema) {
+            if (!\is_array($subSchema)) {
+                continue;
+            }
+
+            // Resolve $ref if present
+            if (isset($subSchema['$ref']) && \is_string($subSchema['$ref'])) {
+                $subSchema = self::resolveRef($subSchema['$ref'], $spec);
+            }
+
+            // Validate against this schema (errors added directly to main collector)
+            self::validate($data, $subSchema, $path, $errors, $spec);
+        }
+
+        // No special error handling needed - if any schema fails, errors are already collected
+    }
+
+    /**
+     * Handle discriminator-based schema selection for oneOf/anyOf.
+     *
+     * When a discriminator is present, use it to determine which schema to validate against.
+     *
+     * @param array<string, mixed> $schema
+     * @param array<string, mixed> $spec
+     * @return bool True if discriminator was successfully used, false if it should fall back to regular validation
+     */
+    private static function handleDiscriminator(mixed $data, array $schema, string $path, array $spec, ErrorCollector $errors): bool
+    {
+        $discriminator = $schema['discriminator'];
+
+        // Get discriminator property name
+        if (!isset($discriminator['propertyName']) || !\is_string($discriminator['propertyName'])) {
+            return false;  // Invalid discriminator config - fall back to regular validation
+        }
+
+        $propertyName = $discriminator['propertyName'];
+
+        // Data must be an object with the discriminator property
+        if (!\is_array($data) || \array_is_list($data)) {
+            // Not an object - fall back to regular validation which will catch the type error
+            return false;
+        }
+
+        // Check if discriminator property exists
+        if (!\array_key_exists($propertyName, $data)) {
+            // Missing discriminator field - fall back to regular validation
+            // The regular validation will catch this as either:
+            // - required field missing (if petType is required in the individual schemas)
+            // - oneOf/anyOf matches none/multiple
+            return false;
+        }
+
+        $discriminatorValue = $data[$propertyName];
+
+        // Discriminator value must be a string
+        if (!\is_string($discriminatorValue)) {
+            $errors->addError(new ValidationError(
+                path: "{$path}.{$propertyName}",
+                specReference: '#/schema/discriminator',
+                constraint: 'discriminator',
+                expectedValue: 'string',
+                receivedValue: \get_debug_type($discriminatorValue),
+                reason: \sprintf('Discriminator field "%s" must be a string, got %s', $propertyName, \get_debug_type($discriminatorValue)),
+                hint: null
+            ));
+            return true;  // We used discriminator (and found wrong type)
+        }
+
+        // Get mapping (if present)
+        $mapping = isset($discriminator['mapping']) && \is_array($discriminator['mapping'])
+            ? $discriminator['mapping']
+            : [];
+
+        // Find schema reference from mapping
+        // If discriminator value is not in mapping, fall back to regular oneOf/anyOf validation
+        if ([] !== $mapping && !isset($mapping[$discriminatorValue])) {
+            // Don't add error here - let oneOf/anyOf handle it without discriminator optimization
+            return false;
+        }
+
+        // Get schema reference
+        $schemaRef = $mapping[$discriminatorValue] ?? null;
+
+        if (null === $schemaRef || !\is_string($schemaRef)) {
+            // No valid schema reference - fall back to regular validation
+            return false;
+        }
+
+        // Resolve and validate against the selected schema
+        $selectedSchema = self::resolveRef($schemaRef, $spec);
+
+        if ([] === $selectedSchema) {
+            // Could not resolve schema - fall back to regular validation
+            return false;
+        }
+
+        // Validate against the selected schema
+        self::validate($data, $selectedSchema, $path, $errors, $spec);
+
+        // Successfully used discriminator
+        return true;
     }
 }

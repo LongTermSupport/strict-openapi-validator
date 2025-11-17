@@ -6,6 +6,9 @@ namespace LongTermSupport\StrictOpenApiValidator;
 
 use LongTermSupport\StrictOpenApiValidator\Exception\AdditionalPropertyException;
 use LongTermSupport\StrictOpenApiValidator\Exception\BoundaryViolationException;
+use LongTermSupport\StrictOpenApiValidator\Exception\CompositionViolationException;
+use LongTermSupport\StrictOpenApiValidator\Exception\DiscriminatorViolationException;
+use LongTermSupport\StrictOpenApiValidator\Exception\EnumViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\FormatViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\PatternViolationException;
 use LongTermSupport\StrictOpenApiValidator\Exception\RequiredFieldMissingException;
@@ -270,6 +273,9 @@ final readonly class Validator
         $formatErrors = 0;
         $boundaryErrors = 0;
         $patternErrors = 0;
+        $enumErrors = 0;
+        $compositionErrors = 0;
+        $discriminatorErrors = 0;
 
         foreach ($errorList as $error) {
             if ('type' === $error->constraint) {
@@ -290,6 +296,15 @@ final readonly class Validator
             if ('pattern' === $error->constraint) {
                 ++$patternErrors;
             }
+            if ('enum' === $error->constraint) {
+                ++$enumErrors;
+            }
+            if (\in_array($error->constraint, ['oneOf', 'anyOf', 'allOf'], true)) {
+                ++$compositionErrors;
+            }
+            if ('discriminator' === $error->constraint) {
+                ++$discriminatorErrors;
+            }
         }
 
         // If only one type of error, throw specific exception
@@ -299,28 +314,40 @@ final readonly class Validator
         }
 
         // If multiple errors of same type, throw specific exception
-        if ($typeErrors > 0 && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors) {
+        if ($typeErrors > 0 && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new TypeMismatchException($errorList);
         }
 
-        if ($requiredErrors > 0 && 0 === $typeErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors) {
+        if ($requiredErrors > 0 && 0 === $typeErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new RequiredFieldMissingException($errorList);
         }
 
-        if ($additionalPropErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors) {
+        if ($additionalPropErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new AdditionalPropertyException($errorList);
         }
 
-        if ($formatErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $boundaryErrors && 0 === $patternErrors) {
+        if ($formatErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new FormatViolationException($errorList);
         }
 
-        if ($boundaryErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $patternErrors) {
+        if ($boundaryErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new BoundaryViolationException($errorList);
         }
 
-        if ($patternErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors) {
+        if ($patternErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $enumErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
             throw new PatternViolationException($errorList);
+        }
+
+        if ($enumErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $compositionErrors && 0 === $discriminatorErrors) {
+            throw new EnumViolationException($errorList);
+        }
+
+        if ($compositionErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $discriminatorErrors) {
+            throw new CompositionViolationException($errorList);
+        }
+
+        if ($discriminatorErrors > 0 && 0 === $typeErrors && 0 === $requiredErrors && 0 === $additionalPropErrors && 0 === $formatErrors && 0 === $boundaryErrors && 0 === $patternErrors && 0 === $enumErrors && 0 === $compositionErrors) {
+            throw new DiscriminatorViolationException($errorList);
         }
 
         // Multiple error types - throw generic SchemaViolationException
@@ -354,6 +381,18 @@ final readonly class Validator
 
         if ('pattern' === $error->constraint) {
             throw new PatternViolationException([$error]);
+        }
+
+        if ('enum' === $error->constraint) {
+            throw new EnumViolationException([$error]);
+        }
+
+        if (\in_array($error->constraint, ['oneOf', 'anyOf', 'allOf'], true)) {
+            throw new CompositionViolationException([$error]);
+        }
+
+        if ('discriminator' === $error->constraint) {
+            throw new DiscriminatorViolationException([$error]);
         }
 
         // Fallback to generic SchemaViolationException
