@@ -91,8 +91,8 @@ final readonly class TypeValidator
             'number' => \is_float($data) || \is_int($data),
             'integer' => \is_int($data),
             'boolean' => \is_bool($data),
-            'array' => \is_array($data) && \array_is_list($data),
-            'object' => \is_array($data) && !\array_is_list($data),
+            'array' => \is_array($data) && ([] !== $data && \array_is_list($data) || [] === $data),
+            'object' => \is_array($data) && ([] === $data || !\array_is_list($data)),
             'null' => null === $data,
             default => false,
         };
