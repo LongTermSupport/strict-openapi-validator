@@ -1,0 +1,5 @@
+Spec: Hypothetical Pet schema WITHOUT discriminator
+Violation: Data has properties from both Dog and Cat schemas
+Expected Error: oneOf validation failed: data matches 2 schemas (must match exactly 1)
+Hint: Cannot determine if this is a Dog or Cat. Use discriminator field 'petType'.
+Note: This demonstrates why discriminator is important for oneOf - without it, ambiguous data causes validation failure

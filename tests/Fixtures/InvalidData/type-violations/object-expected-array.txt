@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'tags' expects array but got object
+Expected Error: Type mismatch at path 'tags': expected array, got object
+Hint: Expected an array like ["electronics", "widget"], not an object

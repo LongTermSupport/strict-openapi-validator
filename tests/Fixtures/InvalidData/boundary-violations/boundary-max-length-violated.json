@@ -1,0 +1,5 @@
+{
+  "name": "This product name is way too long and exceeds the maximum allowed length of 200 characters for the name field in the Product schema. Let me keep typing to make sure we definitely exceed the limit with lots of extra unnecessary words and characters here to pad it out even more and more.",
+  "price": 99.99,
+  "status": "active"
+}

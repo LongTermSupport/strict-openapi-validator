@@ -1,0 +1,6 @@
+Spec: Any schema with custom email pattern (stricter than format: email)
+Example pattern: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+Violation: Email missing TLD (top-level domain)
+Expected Error: Pattern violation at path 'email': value 'user@domain' does not match pattern
+Hint: Email must include a valid domain with TLD (e.g., user@domain.com)
+Note: Tests that custom patterns can be stricter than built-in format validators

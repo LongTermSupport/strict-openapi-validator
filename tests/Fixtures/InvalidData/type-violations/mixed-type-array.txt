@@ -1,0 +1,7 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Array 'tags' expects all items to be strings, but contains mixed types
+Expected Error: Type mismatch at path 'tags[1]': expected string, got number
+            Type mismatch at path 'tags[2]': expected string, got boolean
+            Type mismatch at path 'tags[3]': expected string, got null
+Hint: All array items must be strings

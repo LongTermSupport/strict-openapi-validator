@@ -1,0 +1,9 @@
+Spec: composition-examples.json (Dog schema)
+Path: /pets (POST)
+Violation: Multiple errors that cascade from composition + nested validation
+Expected Errors:
+  1. Missing required field 'name' (from Dog schema)
+  2. Enum violation at path 'breed': value 'chihuahua' is not in allowed values
+  3. Type mismatch at path 'isGoodBoy': expected boolean, got string
+  4. Additional property 'extraDogField' is not allowed
+Note: Tests that errors within oneOf branches are collected properly and don't stop at first error

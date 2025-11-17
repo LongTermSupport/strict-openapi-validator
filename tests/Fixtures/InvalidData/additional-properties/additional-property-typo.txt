@@ -1,0 +1,8 @@
+Spec: strict-schemas.json (ProductCreate schema)
+Path: /products (POST)
+Violation: Typo in field name ('nam' instead of 'name') results in two errors
+Expected Errors:
+  - Missing required field 'name'
+  - Additional property 'nam' is not allowed
+Hint for 'nam': Did you mean 'name'? (Levenshtein distance: 1)
+Note: Tests typo detection and that both missing required AND additional property errors are reported

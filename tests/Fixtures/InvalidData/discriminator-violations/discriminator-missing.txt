@@ -1,0 +1,5 @@
+Spec: composition-examples.json (Pet schema with discriminator on petType)
+Path: /pets (POST)
+Violation: Discriminator field 'petType' is missing
+Expected Error: Missing discriminator field 'petType'
+Hint: The field 'petType' is required to determine which schema to use (dog or cat)

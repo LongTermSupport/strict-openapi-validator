@@ -1,0 +1,4 @@
+Spec: Any schema with format: hostname
+Violation: Field expects valid hostname but got invalid characters
+Expected Error: Format violation at path 'serverHostname': expected format 'hostname', got 'invalid_hostname!'
+Hint: Hostname must be valid DNS hostname (letters, digits, hyphens, dots only)

@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (ProductCreate schema)
+Path: /products (POST)
+Violation: Property 'created_at' not recognized (correct name is 'createdAt')
+Expected Error: Additional property 'created_at' is not allowed
+Hint: Did you mean 'createdAt'? (detected snake_case vs camelCase mismatch)
+Note: Tests detection of common naming convention errors

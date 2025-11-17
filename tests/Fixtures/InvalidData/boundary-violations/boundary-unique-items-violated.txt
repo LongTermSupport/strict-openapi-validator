@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema with tags having uniqueItems: true)
+Path: /products (POST)
+Violation: Array contains duplicate items
+Expected Error: Array constraint violation at path 'tags': items must be unique, found duplicate 'electronics'
+Hint: Array items must be unique (no duplicates allowed)

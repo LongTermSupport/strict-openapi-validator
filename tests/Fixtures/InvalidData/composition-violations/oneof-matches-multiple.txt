@@ -1,0 +1,6 @@
+Spec: composition-examples.json (oneOf without discriminator)
+Note: Requires a schema with oneOf that doesn't use discriminator
+Violation: Data matches multiple oneOf schemas
+Expected Error: oneOf validation failed: data matches 2 of 2 schemas (must match exactly 1)
+Hint: Data is ambiguous - matches multiple schema alternatives
+Note: oneOf requires EXACTLY one match, not zero and not multiple

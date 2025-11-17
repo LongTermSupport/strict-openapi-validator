@@ -1,0 +1,4 @@
+Spec: Any schema with tags array and maxItems: 5
+Violation: Array has too many items
+Expected Error: Array constraint violation at path 'tags': maximum items is 5, got 6
+Hint: Array cannot have more than 5 items

@@ -1,0 +1,4 @@
+Spec: edge-cases.json (BoundaryTests schema with multipleOf: 5)
+Violation: Value is not a multiple of 5
+Expected Error: Numeric constraint violation at path 'quantity': must be multiple of 5, got 7
+Hint: Value must be divisible by 5 (e.g., 0, 5, 10, 15...)

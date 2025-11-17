@@ -1,0 +1,6 @@
+Spec: composition-examples.json (Dog schema with breed enum)
+Path: /pets (POST)
+Violation: Nested enum validation failure within oneOf schema
+Expected Error: Enum violation at path 'breed': value 'chihuahua' is not in allowed values
+Hint: Allowed breeds are: "labrador", "poodle", "bulldog", "beagle"
+Note: Tests that validation errors within oneOf branches are properly reported

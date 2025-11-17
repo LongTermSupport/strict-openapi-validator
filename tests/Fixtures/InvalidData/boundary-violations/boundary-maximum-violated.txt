@@ -1,0 +1,5 @@
+Spec: simple-crud.json (User schema with age maximum: 150)
+Path: /users (POST)
+Violation: Field 'age' exceeds maximum of 150
+Expected Error: Numeric constraint violation at path 'age': maximum is 150, got 200
+Hint: Age cannot exceed 150

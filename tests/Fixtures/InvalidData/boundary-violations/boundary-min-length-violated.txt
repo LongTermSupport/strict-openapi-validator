@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema with name minLength: 1)
+Path: /products (POST)
+Violation: Field 'name' has empty string but minLength is 1
+Expected Error: String length violation at path 'name': minimum length is 1, got 0
+Hint: Field cannot be empty

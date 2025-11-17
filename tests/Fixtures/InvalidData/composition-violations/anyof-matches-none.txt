@@ -1,0 +1,5 @@
+Spec: composition-examples.json (FlexibleValue schema with anyOf)
+Path: /flexible-value (POST)
+Violation: Data doesn't match any of the anyOf schemas
+Expected Error: anyOf validation failed: data matches 0 of 3 schemas (must match at least 1)
+Hint: Data must have at least one of: stringValue, numericValue, or booleanValue

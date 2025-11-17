@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'metadata' expects object but got array
+Expected Error: Type mismatch at path 'metadata': expected object, got array
+Hint: Expected an object like {"weight": "100g"}, not an array

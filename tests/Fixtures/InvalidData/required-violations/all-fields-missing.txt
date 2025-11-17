@@ -1,0 +1,8 @@
+Spec: simple-crud.json (UserCreate schema)
+Path: /users (POST)
+Violation: All required fields missing (empty object)
+Expected Errors:
+  - Missing required field 'name'
+  - Missing required field 'email'
+Hint: Request body is missing all required fields
+Note: Tests validation against empty object

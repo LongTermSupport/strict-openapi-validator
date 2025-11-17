@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'status' has wrong case (enum is case-sensitive)
+Expected Error: Enum violation at path 'status': value 'Active' is not in allowed values
+Hint: Allowed values are: "active", "inactive", "discontinued" (case-sensitive). Did you mean "active"?
+Note: Tests that enum validation is case-sensitive

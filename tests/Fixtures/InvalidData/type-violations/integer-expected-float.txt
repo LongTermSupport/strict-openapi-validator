@@ -1,0 +1,5 @@
+Spec: simple-crud.json (User schema)
+Path: /users (POST)
+Violation: Field 'age' expects integer but got float 35.5
+Expected Error: Type mismatch at path 'age': expected integer, got number (with decimal)
+Hint: Age must be a whole number (integer), not 35.5

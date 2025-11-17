@@ -1,0 +1,6 @@
+Spec: composition-examples.json (Dog schema with additionalProperties: false)
+Path: /pets (POST)
+Violation: Additional property in oneOf branch
+Expected Error: Additional property 'extraField' is not allowed
+Hint: Dog schema does not allow additional properties
+Note: Tests that additionalProperties: false is enforced within composition schemas

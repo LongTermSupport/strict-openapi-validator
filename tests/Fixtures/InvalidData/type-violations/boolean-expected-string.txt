@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'status' expects string enum but got boolean
+Expected Error: Type mismatch at path 'status': expected string, got boolean
+Hint: Use one of the allowed string values: "active", "inactive", "discontinued"

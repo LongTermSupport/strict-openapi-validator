@@ -1,0 +1,5 @@
+Spec: composition-examples.json (Pet schema with discriminator)
+Path: /pets (POST)
+Violation: Discriminator value has wrong case (case-sensitive)
+Expected Error: Invalid discriminator value 'Dog': allowed values are 'dog', 'cat' (case-sensitive)
+Hint: Did you mean 'dog'? Discriminator values are case-sensitive.

@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'status' expects string enum but got number
+Expected Error: Type mismatch at path 'status': expected string, got number
+Hint: Use string value from allowed enum: "active", "inactive", "discontinued"
+Note: Type checking happens before enum checking

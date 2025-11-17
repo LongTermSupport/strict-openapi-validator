@@ -1,0 +1,21 @@
+{
+  "id": "not-a-uuid",
+  "nam": "",
+  "description": "This description is intentionally way too long to exceed the maximum length constraint of 1000 characters for the description field in the Product schema so we need to keep typing and typing to make it longer and longer until we definitely hit that limit and beyond with lots of extra unnecessary words padding it out to ensure we trigger the maxLength validation error along with all the other validation errors in this test fixture which is designed to test multiple simultaneous validation failures across different types of constraints including type mismatches required field violations additional property violations format violations enum violations boundary violations and more to comprehensively test the error collection capabilities of the strict OpenAPI validator to ensure it can handle complex real-world scenarios where multiple things go wrong at once and report them all clearly to the developer so they can fix everything in one go rather than playing whack-a-mole with validation errors one at a time which would be frustrating and inefficient.",
+  "price": "ninety-nine",
+  "status": 1,
+  "tags": ["electronics", "electronics"],
+  "metadata": {
+    "weight": "100g",
+    "dimensions": {
+      "length": 10,
+      "width": 5,
+      "height": 3,
+      "volume": 150
+    },
+    "extraMetadata": "not allowed"
+  },
+  "createdAt": "2024-11-17 10:00:00",
+  "extraField1": "nope",
+  "extraField2": "also nope"
+}

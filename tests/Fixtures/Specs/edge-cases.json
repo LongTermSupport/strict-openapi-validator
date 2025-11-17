@@ -1,0 +1,261 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Edge Cases API",
+    "version": "1.0.0",
+    "description": "Tests edge cases: nullable vs optional, empty values, boundaries, patterns"
+  },
+  "paths": {
+    "/edge-cases/nullable": {
+      "post": {
+        "operationId": "testNullableFields",
+        "summary": "Test all 4 combinations of required + nullable",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NullableCombinations"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/edge-cases/empty-values": {
+      "post": {
+        "operationId": "testEmptyValues",
+        "summary": "Test empty strings, arrays, objects",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyValues"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/edge-cases/boundaries": {
+      "post": {
+        "operationId": "testBoundaries",
+        "summary": "Test boundary conditions (min/max, exclusive)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoundaryTests"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/edge-cases/patterns": {
+      "post": {
+        "operationId": "testPatterns",
+        "summary": "Test pattern matching edge cases",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatternTests"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NullableCombinations": {
+        "type": "object",
+        "required": ["requiredNullable", "requiredNonNullable"],
+        "additionalProperties": false,
+        "properties": {
+          "requiredNullable": {
+            "type": ["string", "null"],
+            "description": "Required + Nullable: must be present, can be null"
+          },
+          "requiredNonNullable": {
+            "type": "string",
+            "description": "Required + Non-Nullable: must be present, must be non-null"
+          },
+          "optionalNullable": {
+            "type": ["string", "null"],
+            "description": "Optional + Nullable: can be omitted, can be null"
+          },
+          "optionalNonNullable": {
+            "type": "string",
+            "description": "Optional + Non-Nullable: can be omitted, if present must be non-null"
+          }
+        }
+      },
+      "EmptyValues": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "emptyStringAllowed": {
+            "type": "string",
+            "description": "Empty string is valid (no minLength)"
+          },
+          "emptyStringNotAllowed": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Empty string fails validation"
+          },
+          "emptyArrayAllowed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Empty array is valid (no minItems)"
+          },
+          "emptyArrayNotAllowed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Empty array fails validation"
+          },
+          "emptyObjectAllowed": {
+            "type": "object",
+            "description": "Empty object is valid (no minProperties)"
+          },
+          "emptyObjectNotAllowed": {
+            "type": "object",
+            "minProperties": 1,
+            "description": "Empty object fails validation"
+          }
+        }
+      },
+      "BoundaryTests": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "minimumInclusive": {
+            "type": "number",
+            "minimum": 0,
+            "description": "0 is valid (inclusive minimum)"
+          },
+          "maximumInclusive": {
+            "type": "number",
+            "maximum": 100,
+            "description": "100 is valid (inclusive maximum)"
+          },
+          "exclusiveMinimum": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "0 is NOT valid (must be > 0)"
+          },
+          "exclusiveMaximum": {
+            "type": "number",
+            "exclusiveMaximum": 100,
+            "description": "100 is NOT valid (must be < 100)"
+          },
+          "minLengthEdge": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Exactly 3 chars is valid (inclusive)"
+          },
+          "maxLengthEdge": {
+            "type": "string",
+            "maxLength": 5,
+            "description": "Exactly 5 chars is valid (inclusive)"
+          },
+          "minItemsEdge": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "description": "Exactly 2 items is valid (inclusive)"
+          },
+          "maxItemsEdge": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 3,
+            "description": "Exactly 3 items is valid (inclusive)"
+          },
+          "multipleOf": {
+            "type": "number",
+            "multipleOf": 5,
+            "description": "Must be multiple of 5"
+          },
+          "uniqueItems": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "uniqueItems": true,
+            "description": "All items must be unique"
+          }
+        }
+      },
+      "PatternTests": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "anchoredPattern": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "Must be exactly 3 uppercase letters"
+          },
+          "unanchoredPattern": {
+            "type": "string",
+            "pattern": "[0-9]+",
+            "description": "Must contain at least one digit (anywhere)"
+          },
+          "emptyStringPattern": {
+            "type": "string",
+            "pattern": "^[a-z]+$",
+            "description": "Empty string fails (+ requires at least one)"
+          },
+          "optionalPattern": {
+            "type": "string",
+            "pattern": "^[a-z]*$",
+            "description": "Empty string passes (* allows zero)"
+          },
+          "phonePattern": {
+            "type": "string",
+            "pattern": "^\\+?[1-9]\\d{1,14}$",
+            "description": "E.164 phone number format"
+          },
+          "hexColorPattern": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "description": "6-digit hex color code"
+          }
+        }
+      }
+    }
+  }
+}

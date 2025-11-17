@@ -1,0 +1,6 @@
+Spec: composition-examples.json (ExtendedUser schema with allOf)
+Path: /extended-user (POST)
+Violation: Data fails one of the allOf schemas (missing required 'role' field)
+Expected Error: allOf validation failed: data fails 1 of 3 schemas (must match all)
+Detailed errors: Missing required field 'role'
+Hint: ExtendedUser requires all fields from BaseUser, UserDetails, and role property

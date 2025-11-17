@@ -1,0 +1,9 @@
+{
+  "name": "Premium Widget",
+  "price": 99.99,
+  "status": "active",
+  "tags": {
+    "0": "electronics",
+    "1": "widget"
+  }
+}

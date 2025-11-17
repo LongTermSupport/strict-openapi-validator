@@ -1,0 +1,5 @@
+Spec: edge-cases.json (BoundaryTests schema with exclusiveMinimum: 0)
+Violation: Value equals exclusiveMinimum (which is not allowed)
+Expected Error: Numeric constraint violation at path 'value': exclusive minimum is 0, got 0 (value must be > 0, not >= 0)
+Hint: Value must be strictly greater than 0
+Note: Tests that exclusiveMinimum means > not >=

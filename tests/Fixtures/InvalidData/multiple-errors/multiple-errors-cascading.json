@@ -1,0 +1,6 @@
+{
+  "petType": "dog",
+  "breed": "chihuahua",
+  "isGoodBoy": "yes",
+  "extraDogField": "not allowed"
+}

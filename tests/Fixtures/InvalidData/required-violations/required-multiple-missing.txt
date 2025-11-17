@@ -1,0 +1,8 @@
+Spec: simple-crud.json (UserCreate schema)
+Path: /users (POST)
+Violation: Multiple required fields missing ('name', 'email')
+Expected Errors:
+  - Missing required field 'name'
+  - Missing required field 'email'
+Hint: Multiple required fields are missing
+Note: Tests that validator collects ALL missing required fields, not just the first one

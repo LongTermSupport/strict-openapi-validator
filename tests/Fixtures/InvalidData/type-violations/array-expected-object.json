@@ -1,0 +1,7 @@
+{
+  "name": "Premium Widget",
+  "price": 99.99,
+  "status": "active",
+  "tags": ["electronics", "widget"],
+  "metadata": ["weight", "100g"]
+}

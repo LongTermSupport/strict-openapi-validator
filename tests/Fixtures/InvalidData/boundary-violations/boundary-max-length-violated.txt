@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema with name maxLength: 200)
+Path: /products (POST)
+Violation: Field 'name' exceeds maximum length of 200 characters
+Expected Error: String length violation at path 'name': maximum length is 200, got 280
+Hint: Product name is too long (280 characters). Maximum allowed is 200.

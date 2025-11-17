@@ -1,0 +1,14 @@
+{
+  "name": "Premium Widget",
+  "price": 99.99,
+  "status": "active",
+  "metadata": {
+    "weight": "100g",
+    "dimensions": {
+      "length": 10,
+      "width": 5,
+      "height": 3,
+      "volume": 150
+    }
+  }
+}

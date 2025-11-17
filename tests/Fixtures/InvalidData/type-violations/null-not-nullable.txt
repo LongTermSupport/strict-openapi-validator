@@ -1,0 +1,5 @@
+Spec: simple-crud.json (User schema)
+Path: /users (POST)
+Violation: Field 'name' is required and non-nullable but got null
+Expected Error: Type mismatch at path 'name': value cannot be null (nullable is false)
+Hint: Field 'name' must have a non-null value

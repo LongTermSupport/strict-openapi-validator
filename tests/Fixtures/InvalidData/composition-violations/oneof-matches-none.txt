@@ -1,0 +1,5 @@
+Spec: composition-examples.json (Pet schema with oneOf: Dog, Cat)
+Path: /pets (POST)
+Violation: Data doesn't match any of the oneOf schemas
+Expected Error: oneOf validation failed: data matches 0 of 2 schemas (must match exactly 1)
+Hint: Expected petType to be "dog" or "cat", got "bird"

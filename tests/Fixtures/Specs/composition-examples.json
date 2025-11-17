@@ -1,0 +1,236 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Schema Composition Examples API",
+    "version": "1.0.0",
+    "description": "Demonstrates oneOf, anyOf, allOf, and discriminator usage"
+  },
+  "paths": {
+    "/pets": {
+      "post": {
+        "operationId": "createPet",
+        "summary": "Create a pet (dog or cat)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pet created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flexible-value": {
+      "post": {
+        "operationId": "submitFlexibleValue",
+        "summary": "Submit a flexible value (anyOf example)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlexibleValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Value accepted"
+          }
+        }
+      }
+    },
+    "/extended-user": {
+      "post": {
+        "operationId": "createExtendedUser",
+        "summary": "Create extended user (allOf example)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtendedUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Dog"
+          },
+          {
+            "$ref": "#/components/schemas/Cat"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "petType",
+          "mapping": {
+            "dog": "#/components/schemas/Dog",
+            "cat": "#/components/schemas/Cat"
+          }
+        }
+      },
+      "Dog": {
+        "type": "object",
+        "required": ["petType", "name", "breed"],
+        "additionalProperties": false,
+        "properties": {
+          "petType": {
+            "type": "string",
+            "enum": ["dog"],
+            "description": "Discriminator field"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "breed": {
+            "type": "string",
+            "enum": ["labrador", "poodle", "bulldog", "beagle"]
+          },
+          "isGoodBoy": {
+            "type": "boolean",
+            "description": "Whether the dog is a good boy (always true)"
+          }
+        }
+      },
+      "Cat": {
+        "type": "object",
+        "required": ["petType", "name", "indoor"],
+        "additionalProperties": false,
+        "properties": {
+          "petType": {
+            "type": "string",
+            "enum": ["cat"],
+            "description": "Discriminator field"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "indoor": {
+            "type": "boolean",
+            "description": "Whether the cat is indoor or outdoor"
+          },
+          "livesRemaining": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9,
+            "description": "Number of lives remaining"
+          }
+        }
+      },
+      "FlexibleValue": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": ["stringValue"],
+            "additionalProperties": false,
+            "properties": {
+              "stringValue": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["numericValue"],
+            "additionalProperties": false,
+            "properties": {
+              "numericValue": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["booleanValue"],
+            "additionalProperties": false,
+            "properties": {
+              "booleanValue": {
+                "type": "boolean"
+              }
+            }
+          }
+        ],
+        "description": "Accepts an object with either stringValue, numericValue, or booleanValue (or multiple)"
+      },
+      "BaseUser": {
+        "type": "object",
+        "required": ["id", "username"],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          }
+        }
+      },
+      "UserDetails": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        }
+      },
+      "ExtendedUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseUser"
+          },
+          {
+            "$ref": "#/components/schemas/UserDetails"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": ["admin", "user", "guest"]
+              }
+            }
+          }
+        ],
+        "description": "Combines BaseUser, UserDetails, and adds role property"
+      }
+    }
+  }
+}

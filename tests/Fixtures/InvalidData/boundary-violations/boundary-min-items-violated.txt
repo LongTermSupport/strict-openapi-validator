@@ -1,0 +1,4 @@
+Spec: edge-cases.json (EmptyValues schema with emptyArrayNotAllowed having minItems: 1)
+Violation: Array is empty but minItems is 1
+Expected Error: Array constraint violation at path 'items': minimum items is 1, got 0
+Hint: Array must contain at least one item

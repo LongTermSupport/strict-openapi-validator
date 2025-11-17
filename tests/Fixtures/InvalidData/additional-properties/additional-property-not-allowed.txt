@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (ProductCreate schema with additionalProperties: false)
+Path: /products (POST)
+Violation: Additional property 'extraField' not allowed
+Expected Error: Additional property 'extraField' is not allowed
+Hint: Schema does not allow additional properties. Only the defined fields are permitted.

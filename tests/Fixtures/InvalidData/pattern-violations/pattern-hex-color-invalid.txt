@@ -1,0 +1,4 @@
+Spec: edge-cases.json (PatternTests schema with hexColorPattern: ^#[0-9A-Fa-f]{6}$)
+Violation: Hex color contains invalid characters (G not in 0-9A-F)
+Expected Error: Pattern violation at path 'color': value '#GGGGGG' does not match pattern '^#[0-9A-Fa-f]{6}$'
+Hint: Hex color must be # followed by 6 hexadecimal digits (e.g., #FF5733)

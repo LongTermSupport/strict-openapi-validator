@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'status' has invalid enum value
+Expected Error: Enum violation at path 'status': value 'pending' is not in allowed values
+Hint: Allowed values are: "active", "inactive", "discontinued"

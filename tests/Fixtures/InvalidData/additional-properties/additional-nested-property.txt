@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema with nested metadata)
+Path: /products (POST)
+Violation: Additional property 'volume' in nested object metadata.dimensions
+Expected Error: Additional property 'metadata.dimensions.volume' is not allowed
+Hint: The nested schema for dimensions only allows length, width, height
+Note: Tests that additionalProperties: false is enforced in nested objects

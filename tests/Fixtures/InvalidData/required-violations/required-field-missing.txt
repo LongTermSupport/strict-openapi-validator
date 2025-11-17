@@ -1,0 +1,5 @@
+Spec: simple-crud.json (UserCreate schema)
+Path: /users (POST)
+Violation: Required field 'name' is missing
+Expected Error: Missing required field 'name'
+Hint: The field 'name' is required and must be present in the request

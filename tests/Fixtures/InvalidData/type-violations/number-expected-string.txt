@@ -1,0 +1,5 @@
+Spec: simple-crud.json (User schema)
+Path: /users (POST)
+Violation: Field 'name' expects string but got number 12345
+Expected Error: Type mismatch at path 'name': expected string, got number
+Hint: Did you mean to use "12345" (in quotes)?

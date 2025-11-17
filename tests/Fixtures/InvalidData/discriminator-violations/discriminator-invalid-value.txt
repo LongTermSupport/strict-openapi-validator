@@ -1,0 +1,5 @@
+Spec: composition-examples.json (Pet schema with discriminator)
+Path: /pets (POST)
+Violation: Discriminator value 'bird' is not in mapping
+Expected Error: Invalid discriminator value 'bird': allowed values are 'dog', 'cat'
+Hint: petType must be one of the mapped values

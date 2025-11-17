@@ -1,0 +1,10 @@
+Spec: composition-examples.json (ExtendedUser schema with allOf)
+Path: /extended-user (POST)
+Violation: Data fails multiple allOf schemas (too short username, missing email, age, role)
+Expected Error: allOf validation failed: data fails 3 of 3 schemas (must match all)
+Detailed errors:
+  - String length violation: username minimum length is 3, got 2
+  - Missing required field 'email'
+  - Missing required field 'age'
+  - Missing required field 'role'
+Hint: Must satisfy all combined schema requirements

@@ -1,0 +1,4 @@
+Spec: edge-cases.json (PatternTests schema with anchoredPattern: ^[A-Z]{3}$)
+Violation: Value doesn't match pattern (wrong case)
+Expected Error: Pattern violation at path 'code': value 'abc' does not match pattern '^[A-Z]{3}$'
+Hint: Value must be exactly 3 uppercase letters (e.g., ABC, XYZ)

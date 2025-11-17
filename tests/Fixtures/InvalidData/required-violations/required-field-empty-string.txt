@@ -1,0 +1,6 @@
+Spec: edge-cases.json (EmptyValues schema with minLength: 1)
+Path: Tests empty string validation
+Violation: Field 'emptyStringNotAllowed' has empty string but minLength is 1
+Expected Error: String length violation at path 'emptyStringNotAllowed': minimum length is 1, got 0
+Hint: This field cannot be an empty string
+Note: Empty string is NOT the same as null or missing. Tests that present but empty fails minLength

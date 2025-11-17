@@ -1,0 +1,6 @@
+Spec: simple-crud.json (User schema)
+Path: /users (POST)
+Violation: Field 'age' expects integer but got string "35" (STRICT mode - NO coercion)
+Expected Error: Type mismatch at path 'age': expected integer, got string
+Hint: Use the numeric value 35, not the string "35". This validator does not coerce types.
+Note: This tests that the validator DOES NOT perform type coercion (important for strict validation)

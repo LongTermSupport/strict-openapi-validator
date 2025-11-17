@@ -1,0 +1,5 @@
+Spec: edge-cases.json (BoundaryTests schema with exclusiveMaximum: 100)
+Violation: Value equals exclusiveMaximum (which is not allowed)
+Expected Error: Numeric constraint violation at path 'value': exclusive maximum is 100, got 100 (value must be < 100, not <= 100)
+Hint: Value must be strictly less than 100
+Note: Tests that exclusiveMaximum means < not <=

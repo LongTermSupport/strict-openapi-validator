@@ -1,0 +1,9 @@
+Spec: strict-schemas.json (ProductCreate schema)
+Path: /products (POST)
+Violation: Multiple additional properties not allowed
+Expected Errors:
+  - Additional property 'extraField1' is not allowed
+  - Additional property 'extraField2' is not allowed
+  - Additional property 'anotherExtra' is not allowed
+Hint: Schema does not allow additional properties
+Note: Tests that validator collects ALL additional properties, not just the first one

@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Empty string not in allowed enum values
+Expected Error: Enum violation at path 'status': value '' is not in allowed values
+Hint: Allowed values are: "active", "inactive", "discontinued"
+Note: Tests that empty string is NOT automatically valid for string enums

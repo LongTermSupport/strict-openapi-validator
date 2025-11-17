@@ -1,0 +1,17 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: 10+ different validation errors
+Expected Errors:
+  1. Format violation at path 'id': expected format 'uuid', got 'not-a-uuid'
+  2. Missing required field 'name'
+  3. Additional property 'nam' is not allowed (hint: did you mean 'name'?)
+  4. String length violation at path 'description': maximum length is 1000, got ~900+
+  5. Type mismatch at path 'price': expected number, got string
+  6. Type mismatch at path 'status': expected string, got number
+  7. Array constraint violation at path 'tags': items must be unique, found duplicate 'electronics'
+  8. Additional property 'metadata.dimensions.volume' is not allowed
+  9. Additional property 'metadata.extraMetadata' is not allowed
+ 10. Format violation at path 'createdAt': expected format 'date-time', got '2024-11-17 10:00:00'
+ 11. Additional property 'extraField1' is not allowed
+ 12. Additional property 'extraField2' is not allowed
+Note: Tests comprehensive error collection across all violation types

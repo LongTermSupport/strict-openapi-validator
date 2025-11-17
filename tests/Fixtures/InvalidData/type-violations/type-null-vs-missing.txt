@@ -1,0 +1,8 @@
+Spec: edge-cases.json (NullableCombinations schema)
+Path: Tests both null vs missing scenarios
+Violation: Tests critical distinction between null value and missing field
+Expected Errors:
+  - Missing required field 'name'
+  - Field 'age' cannot be null (optional non-nullable)
+Hint: Null and missing are different. Required fields must be present. Non-nullable fields cannot be null.
+Note: This is the "Four Combinations" test case (required/optional × nullable/non-nullable)

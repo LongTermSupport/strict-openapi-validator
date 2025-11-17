@@ -1,0 +1,5 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'price' has minimum: 0 but value is negative
+Expected Error: Numeric constraint violation at path 'price': minimum is 0, got -10.5
+Hint: Price must be non-negative (>= 0)

@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Required enum field cannot be null
+Expected Error: Type mismatch at path 'status': value cannot be null (nullable is false)
+Hint: Field 'status' must be one of: "active", "inactive", "discontinued"
+Note: Null handling is checked before enum validation

@@ -1,0 +1,4 @@
+Spec: Any schema with alphanumeric pattern: ^[a-zA-Z0-9]+$
+Violation: Value contains underscore (not alphanumeric)
+Expected Error: Pattern violation at path 'identifier': value 'ABC_123' does not match pattern '^[a-zA-Z0-9]+$'
+Hint: Value must contain only letters and numbers (no special characters or spaces)

@@ -1,0 +1,6 @@
+{
+  "petType": "dog",
+  "name": "Max",
+  "breed": "labrador",
+  "extraField": "not allowed"
+}

@@ -1,0 +1,5 @@
+Spec: simple-crud.json (User schema)
+Path: /users (POST)
+Violation: Field 'age' expects integer but got string "thirty-five"
+Expected Error: Type mismatch at path 'age': expected integer, got string
+Hint: Did you mean to use a numeric value like 35 instead of "thirty-five"?

@@ -1,0 +1,6 @@
+{
+  "name": "Premium Widget",
+  "price": 99.99,
+  "status": "active",
+  "id": "not-a-uuid"
+}

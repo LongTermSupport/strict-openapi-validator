@@ -1,0 +1,5 @@
+Spec: simple-crud.json (UserCreate schema)
+Path: /users (POST)
+Violation: Field 'email' has format: email but value doesn't match
+Expected Error: Format violation at path 'email': expected format 'email', got 'not-an-email'
+Hint: Email must be in valid format (e.g., user@domain.com)

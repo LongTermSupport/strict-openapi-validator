@@ -1,0 +1,10 @@
+Spec: strict-schemas.json (ProductCreate schema)
+Path: /products (POST)
+Violation: 5 different validation errors
+Expected Errors:
+  1. Missing required field 'name'
+  2. Additional property 'nam' is not allowed (hint: did you mean 'name'?)
+  3. Numeric constraint violation at path 'price': minimum is 0, got -50
+  4. Enum violation at path 'status': value 'pending' is not in allowed values
+  5. Format violation at path 'createdAt': expected format 'date-time', got 'invalid-date'
+Note: Tests that validator collects multiple errors across different violation types
