@@ -20,3 +20,6 @@ Thumbs.db
 # Untracked directory for temporary files (excludes its own .gitignore)
 /untracked/*
 !/untracked/.gitignore
+
+# Claude Code personal configuration
+.claude/

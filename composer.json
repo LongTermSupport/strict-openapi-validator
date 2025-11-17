@@ -19,7 +19,9 @@
         }
     ],
     "require": {
-        "php": "^8.4"
+        "php": "^8.4",
+        "symfony/http-foundation": "^7.0",
+        "symfony/yaml": "^7.0"
     },
     "require-dev": {
         "lts/php-qa-ci": "dev-php8.4"
@@ -39,6 +41,11 @@
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true,
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "lts/php-qa-ci": true,
+            "ergebnis/composer-normalize": true
+        }
     }
 }
