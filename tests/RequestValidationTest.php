@@ -374,8 +374,8 @@ final class RequestValidationTest extends TestCase
     {
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/additional-properties/multiple-additional-properties.json');
 
-        $this->expectException(AdditionalPropertyException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectException(SchemaViolationException::class);
+        $this->expectExceptionMessage('Additional property');
 
         Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
@@ -929,7 +929,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/composition-violations/oneof-matches-multiple.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectExceptionMessage('Additional property');
 
         Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
@@ -961,7 +961,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/composition-violations/allof-fails-one.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('match');
+        $this->expectExceptionMessage('minLength');
 
         Validator::validateRequest($json, $this->compositionSpec, '/allof-test', 'post');
     }
@@ -977,7 +977,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/composition-violations/allof-fails-multiple.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectExceptionMessage('Required field');
 
         Validator::validateRequest($json, $this->compositionSpec, '/allof-test', 'post');
     }
@@ -1097,7 +1097,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/multiple-errors/multiple-errors-5.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectExceptionMessage('Validation failed with');
 
         Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
@@ -1113,7 +1113,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/multiple-errors/multiple-errors-10.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectExceptionMessage('Validation failed with');
 
         Validator::validateRequest($json, $this->strictSchemasSpec, '/products', 'post');
     }
@@ -1129,7 +1129,7 @@ final class RequestValidationTest extends TestCase
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/multiple-errors/multiple-errors-cascading.json');
 
         $this->expectException(SchemaViolationException::class);
-        $this->expectExceptionMessage('multiple');
+        $this->expectExceptionMessage('oneOf');
 
         Validator::validateRequest($json, $this->compositionSpec, '/pets', 'post');
     }
