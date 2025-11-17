@@ -128,33 +128,89 @@ final readonly class Validator
     /**
      * Validate a Symfony Request object against the OpenAPI spec.
      *
-     * Phase 5: Not yet implemented - proper request matching will be added.
+     * Phase 6: Extracts data from Symfony Request and delegates to validateRequest().
      *
      * @param Request $request Symfony Request object to validate
      * @param Spec $spec OpenAPI specification to validate against
      *
      * @return void
-     * @throws \LogicException Always - not yet implemented
+     * @throws TypeMismatchException When type validation fails
+     * @throws RequiredFieldMissingException When required fields are missing
+     * @throws AdditionalPropertyException When additional properties are not allowed
+     * @throws FormatViolationException When format validation fails
+     * @throws BoundaryViolationException When boundary constraints are violated
+     * @throws PatternViolationException When pattern validation fails
+     * @throws SchemaViolationException When multiple validation errors occur
+     * @throws InvalidRequestPathException When path/method not found in spec
      */
     public static function validate(Request $request, Spec $spec): void
     {
-        throw new \LogicException('Not yet implemented');
+        // Extract path from request
+        $path = $request->getPathInfo();
+
+        // Extract method from request (lowercase to match spec keys)
+        $method = \strtolower($request->getMethod());
+
+        // Extract JSON body from request (empty string for GET requests)
+        $json = $request->getContent();
+        if (false === $json) {
+            $json = '';
+        }
+
+        // Handle empty content (GET requests, etc.)
+        if ('' === $json) {
+            $json = '{}';
+        }
+
+        // Delegate to existing validateRequest() method
+        self::validateRequest($json, $spec, $path, $method);
     }
 
     /**
      * Validate a Symfony Response object against the OpenAPI spec.
      *
-     * Phase 5: Not yet implemented - proper response matching will be added.
+     * Phase 6: Extracts data from Symfony Response and delegates to validateResponse().
+     *
+     * Note: Response objects don't contain path/method information, so these must be
+     * provided by the caller. If not provided, falls back to first response schema.
      *
      * @param Response $response Symfony Response object to validate
      * @param Spec $spec OpenAPI specification to validate against
+     * @param string $path Response path (e.g., "/users/{id}") - empty uses first schema
+     * @param string $method HTTP method (e.g., "get", "post") - empty uses first schema
      *
      * @return void
-     * @throws \LogicException Always - not yet implemented
+     * @throws TypeMismatchException When type validation fails
+     * @throws RequiredFieldMissingException When required fields are missing
+     * @throws AdditionalPropertyException When additional properties are not allowed
+     * @throws FormatViolationException When format validation fails
+     * @throws BoundaryViolationException When boundary constraints are violated
+     * @throws PatternViolationException When pattern validation fails
+     * @throws SchemaViolationException When multiple validation errors occur
+     * @throws InvalidResponseStatusException When status code not found in spec
      */
-    public static function validateSymfonyResponse(Response $response, Spec $spec): void
-    {
-        throw new \LogicException('Not yet implemented');
+    public static function validateSymfonyResponse(
+        Response $response,
+        Spec $spec,
+        string $path = '',
+        string $method = ''
+    ): void {
+        // Extract status code from response
+        $statusCode = $response->getStatusCode();
+
+        // Extract JSON body from response (empty string for no content responses)
+        $json = $response->getContent();
+        if (false === $json) {
+            $json = '';
+        }
+
+        // Handle empty content
+        if ('' === $json) {
+            $json = '{}';
+        }
+
+        // Delegate to existing validateResponse() method
+        self::validateResponse($json, $spec, $path, $method, $statusCode);
     }
 
     /**
