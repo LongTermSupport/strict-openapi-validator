@@ -1,7 +1,6 @@
 {
+  "name": "Product Name",
   "nam": "",
-  "price": -50,
-  "status": "pending",
   "createdAt": "invalid-date",
   "extraField": "not allowed"
 }

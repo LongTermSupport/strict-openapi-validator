@@ -1,3 +1,10 @@
 {
-  "tags": ["electronics", "widget", "electronics"]
+  "name": "Product Name",
+  "tags": [
+    "electronics",
+    "widget",
+    "electronics"
+  ],
+  "price": 99.99,
+  "status": "active"
 }

@@ -2,5 +2,10 @@
   "name": "Premium Widget",
   "price": 99.99,
   "status": "active",
-  "tags": ["electronics", 123, true, null]
+  "tags": [
+    "valid",
+    123,
+    true,
+    null
+  ]
 }

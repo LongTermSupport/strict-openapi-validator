@@ -1,8 +1,7 @@
 {
-  "name": "John Doe",
-  "email": "not-an-email",
   "id": "550e8400-e29b-41d4-a716-446655440000",
-  "price": 10.0,
-  "status": "active",
+  "name": "Premium Widget",
+  "price": 99.99,
+  "status": true,
   "createdAt": "2024-01-01T00:00:00Z"
 }

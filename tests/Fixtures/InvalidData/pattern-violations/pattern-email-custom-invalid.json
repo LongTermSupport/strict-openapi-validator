@@ -1,3 +1,6 @@
 {
-  "email": "user@domain"
+  "name": "Product Name",
+  "email": "invalid-email",
+  "price": 99.99,
+  "status": "active"
 }

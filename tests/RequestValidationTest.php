@@ -550,7 +550,7 @@ final class RequestValidationTest extends TestCase
     }
 
     /**
-     * Tests that invalid phone format is rejected.
+     * Tests that invalid phone pattern is rejected.
      *
      * Example: "123-456-7890" instead of "+12125551234" (E.164 format)
      */
@@ -559,10 +559,10 @@ final class RequestValidationTest extends TestCase
     {
         $json = \Safe\file_get_contents(__DIR__ . '/Fixtures/InvalidData/format-violations/format-phone-invalid.json');
 
-        $this->expectException(FormatViolationException::class);
-        $this->expectExceptionMessage('phone');
+        $this->expectException(PatternViolationException::class);
+        $this->expectExceptionMessage('phonePattern');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/patterns', 'post');
     }
 
     // ========================================

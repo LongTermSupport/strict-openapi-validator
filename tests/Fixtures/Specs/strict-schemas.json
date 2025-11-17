@@ -145,6 +145,81 @@
             "type": "string",
             "format": "date-time",
             "description": "Last update timestamp (optional)"
+          },
+          "externalId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "External UUID reference (optional, for testing format validation)"
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Scheduled publication time (optional, for testing format validation)"
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Event date (optional, for testing format validation)"
+          },
+          "websiteUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Website URL (optional, for testing format validation)"
+          },
+          "serverHost": {
+            "type": "string",
+            "format": "hostname",
+            "description": "Server hostname (optional, for testing format validation)"
+          },
+          "ipv4Address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "IPv4 address (optional, for testing format validation)"
+          },
+          "ipv6Address": {
+            "type": "string",
+            "format": "ipv6",
+            "description": "IPv6 address (optional, for testing format validation)"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}-[0-9]{3}$",
+            "description": "Product code with pattern (optional, for testing pattern validation)"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{1,14}$",
+            "description": "Phone number in E.164 format (optional, for testing pattern validation)"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$",
+            "description": "Hex color code (optional, for testing pattern validation)"
+          },
+          "identifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "description": "Alphanumeric identifier (optional, for testing pattern validation)"
+          },
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 100,
+            "description": "Value between 0 and 100 exclusive (optional, for testing boundary validation)"
+          },
+          "quantity": {
+            "type": "integer",
+            "multipleOf": 5,
+            "description": "Quantity in multiples of 5 (optional, for testing multipleOf validation)"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "description": "Items array with size constraints (optional, for testing array boundary validation)"
           }
         }
       },
@@ -210,6 +285,81 @@
                 }
               }
             }
+          },
+          "externalId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "External UUID reference (optional, for testing format validation)"
+          },
+          "scheduledAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Scheduled publication time (optional, for testing format validation)"
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Event date (optional, for testing format validation)"
+          },
+          "websiteUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Website URL (optional, for testing format validation)"
+          },
+          "serverHost": {
+            "type": "string",
+            "format": "hostname",
+            "description": "Server hostname (optional, for testing format validation)"
+          },
+          "ipv4Address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "IPv4 address (optional, for testing format validation)"
+          },
+          "ipv6Address": {
+            "type": "string",
+            "format": "ipv6",
+            "description": "IPv6 address (optional, for testing format validation)"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}-[0-9]{3}$",
+            "description": "Product code with pattern (optional, for testing pattern validation)"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{1,14}$",
+            "description": "Phone number in E.164 format (optional, for testing pattern validation)"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$",
+            "description": "Hex color code (optional, for testing pattern validation)"
+          },
+          "identifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]+$",
+            "description": "Alphanumeric identifier (optional, for testing pattern validation)"
+          },
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 100,
+            "description": "Value between 0 and 100 exclusive (optional, for testing boundary validation)"
+          },
+          "quantity": {
+            "type": "integer",
+            "multipleOf": 5,
+            "description": "Quantity in multiples of 5 (optional, for testing multipleOf validation)"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 10,
+            "description": "Items array with size constraints (optional, for testing array boundary validation)"
           }
         }
       }

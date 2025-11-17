@@ -1,6 +1,8 @@
 {
-  "name": "Premium Widget",
-  "price": 99.99,
+  "id": "not-a-uuid",
+  "name": "Test Product",
+  "price": 10.0,
   "status": "active",
-  "id": "not-a-uuid"
+  "createdAt": "2024-01-01T00:00:00Z",
+  "externalId": "also-not-a-uuid"
 }

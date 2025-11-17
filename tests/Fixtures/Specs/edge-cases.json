@@ -217,6 +217,36 @@
             },
             "uniqueItems": true,
             "description": "All items must be unique"
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date in YYYY-MM-DD format"
+          },
+          "websiteUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Valid URI"
+          },
+          "relativeUrl": {
+            "type": "string",
+            "format": "uri-reference",
+            "description": "Valid URI reference (can be relative)"
+          },
+          "serverHost": {
+            "type": "string",
+            "format": "hostname",
+            "description": "Valid hostname"
+          },
+          "ipv4Address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "Valid IPv4 address"
+          },
+          "ipv6Address": {
+            "type": "string",
+            "format": "ipv6",
+            "description": "Valid IPv6 address"
           }
         }
       },

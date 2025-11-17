@@ -1,4 +1,7 @@
 {
+  "name": "John Doe",
   "email": "john@example.com",
-  "age": null
+  "age": null,
+  "price": 10.0,
+  "status": "active"
 }

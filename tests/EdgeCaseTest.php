@@ -564,7 +564,7 @@ JSON;
 JSON;
 
         // This should PASS - 0 is valid number, not null
-        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/nullable', 'post');
+        Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
         $this->assertTrue(true);
