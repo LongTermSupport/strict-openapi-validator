@@ -54,8 +54,9 @@ final readonly class Validator
      */
     public static function validateRequest(string $json, Spec $spec, string $path = '', string $method = ''): void
     {
-        // Parse JSON (returns mixed, validated before use)
-        $data = \Safe\json_decode($json, true);
+        // Parse JSON without assoc to preserve object/array distinction
+        // Objects become stdClass, arrays become arrays
+        $data = \Safe\json_decode($json, false);
 
         // Backward compatibility: if path/method not provided, use first schema
         if ('' === $path || '' === $method) {
@@ -101,8 +102,9 @@ final readonly class Validator
      */
     public static function validateResponse(string $json, Spec $spec, string $path = '', string $method = '', int $statusCode = 0): void
     {
-        // Parse JSON (returns mixed, validated before use)
-        $data = \Safe\json_decode($json, true);
+        // Parse JSON without assoc to preserve object/array distinction
+        // Objects become stdClass, arrays become arrays
+        $data = \Safe\json_decode($json, false);
 
         // Backward compatibility: if path/method/status not provided, use first schema
         if ('' === $path || '' === $method || 0 === $statusCode) {
@@ -663,7 +665,7 @@ final readonly class Validator
             if ('format' === $error->constraint) {
                 ++$formatErrors;
             }
-            if (\in_array($error->constraint, ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'minLength', 'maxLength', 'minItems', 'maxItems', 'uniqueItems', 'multipleOf'], true)) {
+            if (\in_array($error->constraint, ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'minLength', 'maxLength', 'minItems', 'maxItems', 'minProperties', 'maxProperties', 'uniqueItems', 'multipleOf'], true)) {
                 ++$boundaryErrors;
             }
             if ('pattern' === $error->constraint) {
@@ -748,7 +750,7 @@ final readonly class Validator
             throw new FormatViolationException([$error]);
         }
 
-        if (\in_array($error->constraint, ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'minLength', 'maxLength', 'minItems', 'maxItems', 'uniqueItems', 'multipleOf'], true)) {
+        if (\in_array($error->constraint, ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'minLength', 'maxLength', 'minItems', 'maxItems', 'minProperties', 'maxProperties', 'uniqueItems', 'multipleOf'], true)) {
             throw new BoundaryViolationException([$error]);
         }
 

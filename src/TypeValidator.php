@@ -83,6 +83,8 @@ final readonly class TypeValidator
 
     /**
      * Check if data matches expected type (strict, no coercion).
+     *
+     * Note: Data comes from json_decode($json, false) so objects are stdClass.
      */
     private static function matchesType(mixed $data, string $expectedType): bool
     {
@@ -91,8 +93,8 @@ final readonly class TypeValidator
             'number' => \is_float($data) || \is_int($data),
             'integer' => \is_int($data),
             'boolean' => \is_bool($data),
-            'array' => \is_array($data) && ([] !== $data && \array_is_list($data) || [] === $data),
-            'object' => \is_array($data) && ([] === $data || !\array_is_list($data)),
+            'array' => \is_array($data),
+            'object' => $data instanceof \stdClass,
             'null' => null === $data,
             default => false,
         };

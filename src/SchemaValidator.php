@@ -44,12 +44,12 @@ final readonly class SchemaValidator
         }
 
         // Required fields (for objects)
-        if (\is_array($data) && !\array_is_list($data)) {
+        if ($data instanceof \stdClass) {
             self::validateRequired($data, $schema, $path, $errors);
         }
 
         // Additional properties (for objects)
-        if (\is_array($data) && !\array_is_list($data)) {
+        if ($data instanceof \stdClass) {
             self::validateAdditionalProperties($data, $schema, $path, $errors, $spec);
         }
 
@@ -66,16 +66,16 @@ final readonly class SchemaValidator
         self::validatePattern($data, $schema, $path, $errors);
 
         // Nested object properties
-        if (\is_array($data) && !\array_is_list($data) && isset($schema['properties']) && \is_array($schema['properties'])) {
+        if ($data instanceof \stdClass && isset($schema['properties']) && \is_array($schema['properties'])) {
             foreach ($schema['properties'] as $propName => $propSchema) {
-                if (\array_key_exists($propName, $data)) {
-                    self::validate($data[$propName], $propSchema, "{$path}.{$propName}", $errors, $spec);
+                if (\property_exists($data, $propName)) {
+                    self::validate($data->$propName, $propSchema, "{$path}.{$propName}", $errors, $spec);
                 }
             }
         }
 
         // Array items
-        if (\is_array($data) && \array_is_list($data) && isset($schema['items']) && \is_array($schema['items'])) {
+        if (\is_array($data) && isset($schema['items']) && \is_array($schema['items'])) {
             foreach ($data as $index => $item) {
                 self::validate($item, $schema['items'], "{$path}[{$index}]", $errors, $spec);
             }
@@ -96,10 +96,10 @@ final readonly class SchemaValidator
     /**
      * Validate required fields.
      *
-     * @param array<string, mixed> $data
+     * @param \stdClass $data
      * @param array<string, mixed> $schema
      */
-    private static function validateRequired(array $data, array $schema, string $path, ErrorCollector $errors): void
+    private static function validateRequired(\stdClass $data, array $schema, string $path, ErrorCollector $errors): void
     {
         if (!isset($schema['required']) || !\is_array($schema['required'])) {
             return;
@@ -110,7 +110,7 @@ final readonly class SchemaValidator
                 continue;
             }
 
-            if (!\array_key_exists($requiredField, $data)) {
+            if (!\property_exists($data, $requiredField)) {
                 $errors->addError(new ValidationError(
                     path: "{$path}.{$requiredField}",
                     specReference: '#/schema/required',
@@ -127,11 +127,11 @@ final readonly class SchemaValidator
     /**
      * Validate additional properties.
      *
-     * @param array<string, mixed> $data
+     * @param \stdClass $data
      * @param array<string, mixed> $schema
      * @param array<string, mixed> $spec
      */
-    private static function validateAdditionalProperties(array $data, array $schema, string $path, ErrorCollector $errors, array $spec): void
+    private static function validateAdditionalProperties(\stdClass $data, array $schema, string $path, ErrorCollector $errors, array $spec): void
     {
         // If additionalProperties is not set or is true, allow any additional properties
         if (!isset($schema['additionalProperties'])) {
@@ -144,7 +144,9 @@ final readonly class SchemaValidator
                 ? \array_keys($schema['properties'])
                 : [];
 
-            foreach ($data as $key => $value) {
+            // Get all properties from stdClass object
+            $dataProps = \get_object_vars($data);
+            foreach ($dataProps as $key => $value) {
                 if (!\in_array($key, $allowedProps, true)) {
                     $errors->addError(new ValidationError(
                         path: "{$path}.{$key}",
@@ -316,6 +318,39 @@ final readonly class SchemaValidator
                         expectedValue: 'all items unique',
                         receivedValue: 'duplicate items found',
                         reason: 'Array contains duplicate items',
+                        hint: null
+                    ));
+                }
+            }
+        }
+
+        // Object property count boundaries
+        if ($data instanceof \stdClass) {
+            $propCount = \count(\get_object_vars($data));
+
+            if (isset($schema['minProperties']) && \is_int($schema['minProperties'])) {
+                if ($propCount < $schema['minProperties']) {
+                    $errors->addError(new ValidationError(
+                        path: $path,
+                        specReference: '#/schema/minProperties',
+                        constraint: 'minProperties',
+                        expectedValue: "count >= {$schema['minProperties']}",
+                        receivedValue: $propCount,
+                        reason: \sprintf('Object has %d properties, less than minProperties %d', $propCount, $schema['minProperties']),
+                        hint: null
+                    ));
+                }
+            }
+
+            if (isset($schema['maxProperties']) && \is_int($schema['maxProperties'])) {
+                if ($propCount > $schema['maxProperties']) {
+                    $errors->addError(new ValidationError(
+                        path: $path,
+                        specReference: '#/schema/maxProperties',
+                        constraint: 'maxProperties',
+                        expectedValue: "count <= {$schema['maxProperties']}",
+                        receivedValue: $propCount,
+                        reason: \sprintf('Object has %d properties, exceeds maxProperties %d', $propCount, $schema['maxProperties']),
                         hint: null
                     ));
                 }
@@ -699,13 +734,13 @@ final readonly class SchemaValidator
         $propertyName = $discriminator['propertyName'];
 
         // Data must be an object with the discriminator property
-        if (!\is_array($data) || \array_is_list($data)) {
+        if (!$data instanceof \stdClass) {
             // Not an object - fall back to regular validation which will catch the type error
             return false;
         }
 
         // Check if discriminator property exists
-        if (!\array_key_exists($propertyName, $data)) {
+        if (!\property_exists($data, $propertyName)) {
             // Missing discriminator field - fall back to regular validation
             // The regular validation will catch this as either:
             // - required field missing (if petType is required in the individual schemas)
@@ -713,7 +748,7 @@ final readonly class SchemaValidator
             return false;
         }
 
-        $discriminatorValue = $data[$propertyName];
+        $discriminatorValue = $data->$propertyName;
 
         // Discriminator value must be a string
         if (!\is_string($discriminatorValue)) {
