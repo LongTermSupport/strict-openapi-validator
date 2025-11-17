@@ -1,6 +1,5 @@
 {
-  "name": "Product Name",
-  "username": "john",
-  "email": "john@example.com",
-  "age": 25
+  "petType": "dog",
+  "name": "",
+  "breed": "labrador"
 }

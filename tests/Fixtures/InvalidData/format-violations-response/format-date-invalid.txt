@@ -1,0 +1,5 @@
+Spec: edge-cases.json (or any schema with format: date)
+Path: Tests date format validation
+Violation: Field expects date format (YYYY-MM-DD) but got US format
+Expected Error: Format violation at path 'eventDate': expected format 'date', got '11/17/2024'
+Hint: Use ISO 8601 date format: YYYY-MM-DD (e.g., 2024-11-17)

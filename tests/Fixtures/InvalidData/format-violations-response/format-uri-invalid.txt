@@ -1,0 +1,4 @@
+Spec: Any schema with format: uri
+Violation: Field expects valid URI but got invalid value
+Expected Error: Format violation at path 'websiteUrl': expected format 'uri', got 'not a url'
+Hint: URI must be a valid absolute URI (e.g., https://example.com/path)

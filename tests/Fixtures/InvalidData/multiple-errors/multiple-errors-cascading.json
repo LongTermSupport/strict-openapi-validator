@@ -1,7 +1,9 @@
 {
-  "name": "Product Name",
-  "petType": "dog",
-  "breed": "chihuahua",
-  "isGoodBoy": "yes",
-  "extraDogField": "not allowed"
+  "price": "not-a-number",
+  "status": null,
+  "metadata": {
+    "weight": -100,
+    "dimensions": "not-an-object"
+  },
+  "tags": "not-an-array"
 }

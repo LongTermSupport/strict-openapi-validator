@@ -1,0 +1,5 @@
+Spec: Any schema with format: ipv6
+Violation: Field expects valid IPv6 address but got malformed value
+Expected Error: Format violation at path 'ipv6Address': expected format 'ipv6', got '::1::2'
+Hint: IPv6 address cannot have multiple :: sequences
+Example valid: 2001:0db8:85a3::8a2e:0370:7334

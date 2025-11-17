@@ -3,9 +3,9 @@
   "name": "Premium Widget",
   "price": 99.99,
   "status": "active",
+  "createdAt": "2024-01-01T00:00:00Z",
   "tags": {
     "0": "electronics",
     "1": "widget"
-  },
-  "createdAt": "2024-01-01T00:00:00Z"
+  }
 }

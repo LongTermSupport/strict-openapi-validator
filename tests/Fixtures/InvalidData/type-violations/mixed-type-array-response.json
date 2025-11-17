@@ -3,11 +3,6 @@
   "name": "Premium Widget",
   "price": 99.99,
   "status": "active",
-  "tags": [
-    "valid",
-    123,
-    true,
-    null
-  ],
-  "createdAt": "2024-01-01T00:00:00Z"
+  "createdAt": "2024-01-01T00:00:00Z",
+  "tags": ["valid", 123, true, null]
 }

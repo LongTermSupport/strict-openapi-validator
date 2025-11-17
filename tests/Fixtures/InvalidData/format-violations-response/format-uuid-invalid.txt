@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products/{productId} (GET parameter) or Product.id field
+Violation: Field expects UUID format but got invalid value
+Expected Error: Format violation at path 'id': expected format 'uuid', got 'not-a-uuid'
+Hint: UUID must be in format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+Example: 123e4567-e89b-12d3-a456-426614174000

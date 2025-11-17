@@ -1,4 +1,5 @@
 {
-  "name": "Product Name",
-  "username": "ab"
+  "petType": 123,
+  "name": 456,
+  "breed": true
 }

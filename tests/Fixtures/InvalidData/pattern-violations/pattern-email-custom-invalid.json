@@ -1,6 +1,6 @@
 {
-  "name": "Product Name",
-  "email": "invalid-email",
-  "price": 99.99,
-  "status": "active"
+  "name": "Test Product",
+  "price": 10.0,
+  "status": "active",
+  "email": "not-an-email"
 }

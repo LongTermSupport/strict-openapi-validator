@@ -75,6 +75,53 @@
           }
         }
       }
+    },
+    "/allof-test": {
+      "post": {
+        "operationId": "testAllOf",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AllOfExample"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/vehicles": {
+      "post": {
+        "operationId": "createVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -98,12 +145,18 @@
       },
       "Dog": {
         "type": "object",
-        "required": ["petType", "name", "breed"],
+        "required": [
+          "petType",
+          "name",
+          "breed"
+        ],
         "additionalProperties": false,
         "properties": {
           "petType": {
             "type": "string",
-            "enum": ["dog"],
+            "enum": [
+              "dog"
+            ],
             "description": "Discriminator field"
           },
           "name": {
@@ -112,7 +165,12 @@
           },
           "breed": {
             "type": "string",
-            "enum": ["labrador", "poodle", "bulldog", "beagle"]
+            "enum": [
+              "labrador",
+              "poodle",
+              "bulldog",
+              "beagle"
+            ]
           },
           "isGoodBoy": {
             "type": "boolean",
@@ -122,12 +180,18 @@
       },
       "Cat": {
         "type": "object",
-        "required": ["petType", "name", "indoor"],
+        "required": [
+          "petType",
+          "name",
+          "indoor"
+        ],
         "additionalProperties": false,
         "properties": {
           "petType": {
             "type": "string",
-            "enum": ["cat"],
+            "enum": [
+              "cat"
+            ],
             "description": "Discriminator field"
           },
           "name": {
@@ -150,7 +214,9 @@
         "anyOf": [
           {
             "type": "object",
-            "required": ["stringValue"],
+            "required": [
+              "stringValue"
+            ],
             "additionalProperties": false,
             "properties": {
               "stringValue": {
@@ -160,7 +226,9 @@
           },
           {
             "type": "object",
-            "required": ["numericValue"],
+            "required": [
+              "numericValue"
+            ],
             "additionalProperties": false,
             "properties": {
               "numericValue": {
@@ -170,7 +238,9 @@
           },
           {
             "type": "object",
-            "required": ["booleanValue"],
+            "required": [
+              "booleanValue"
+            ],
             "additionalProperties": false,
             "properties": {
               "booleanValue": {
@@ -183,7 +253,10 @@
       },
       "BaseUser": {
         "type": "object",
-        "required": ["id", "username"],
+        "required": [
+          "id",
+          "username"
+        ],
         "properties": {
           "id": {
             "type": "integer"
@@ -197,7 +270,9 @@
       },
       "UserDetails": {
         "type": "object",
-        "required": ["email"],
+        "required": [
+          "email"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -224,12 +299,39 @@
             "properties": {
               "role": {
                 "type": "string",
-                "enum": ["admin", "user", "guest"]
+                "enum": [
+                  "admin",
+                  "user",
+                  "guest"
+                ]
               }
             }
           }
         ],
         "description": "Combines BaseUser, UserDetails, and adds role property"
+      },
+      "AllOfExample": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "minLength": 3
+              }
+            }
+          }
+        ]
       }
     }
   }

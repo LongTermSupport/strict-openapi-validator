@@ -1,0 +1,11 @@
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "price": "not-a-number",
+  "status": null,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "metadata": {
+    "weight": -100,
+    "dimensions": "not-an-object"
+  },
+  "tags": "not-an-array"
+}

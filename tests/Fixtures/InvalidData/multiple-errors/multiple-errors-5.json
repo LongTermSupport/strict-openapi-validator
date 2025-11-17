@@ -1,6 +1,7 @@
 {
-  "name": "Product Name",
-  "nam": "",
+  "price": -10,
+  "status": "invalid-status",
   "createdAt": "invalid-date",
-  "extraField": "not allowed"
+  "extraField": "not allowed",
+  "nam": "typo field"
 }

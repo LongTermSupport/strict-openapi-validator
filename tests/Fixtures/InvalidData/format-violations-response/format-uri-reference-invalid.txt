@@ -1,0 +1,4 @@
+Spec: Any schema with format: uri-reference
+Violation: Field expects valid URI reference but got malformed value
+Expected Error: Format violation at path 'resourceLink': expected format 'uri-reference', got '://invalid'
+Hint: URI reference can be relative or absolute, but must be well-formed

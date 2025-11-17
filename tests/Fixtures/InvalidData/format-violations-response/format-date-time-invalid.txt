@@ -1,0 +1,6 @@
+Spec: strict-schemas.json (Product schema)
+Path: /products (POST)
+Violation: Field 'createdAt' expects date-time format (RFC 3339) but got invalid format
+Expected Error: Format violation at path 'createdAt': expected format 'date-time', got '2024-11-17 10:00:00'
+Hint: Use RFC 3339 format: 2024-11-17T10:00:00Z or 2024-11-17T10:00:00+00:00
+Note: Space separator is not valid, must use 'T'. Missing timezone is also invalid.

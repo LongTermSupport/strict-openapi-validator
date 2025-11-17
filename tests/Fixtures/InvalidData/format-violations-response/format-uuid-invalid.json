@@ -1,0 +1,7 @@
+{
+  "id": "not-a-uuid",
+  "name": "Test Product",
+  "price": 10.0,
+  "status": "active",
+  "createdAt": "2024-01-01T00:00:00Z"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "not-a-uuid",
+  "price": -10,
+  "status": "invalid-status",
+  "createdAt": "invalid-date",
+  "extraField": "not allowed",
+  "nam": "typo field"
+}

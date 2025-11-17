@@ -3,14 +3,12 @@
   "price": 99.99,
   "status": "active",
   "metadata": {
-    "weight": "100g",
+    "weight": 100,
     "dimensions": {
       "length": 10,
       "width": 5,
       "height": 3,
       "volume": 150
     }
-  },
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "createdAt": "2024-01-01T00:00:00Z"
+  }
 }

@@ -1,0 +1,5 @@
+Spec: edge-cases.json (PatternTests with phonePattern for E.164 format)
+Violation: Phone number doesn't match E.164 pattern
+Expected Error: Pattern violation at path 'phoneNumber': value '123-456-7890' does not match pattern '^\+[1-9]\d{1,14}$'
+Hint: Use E.164 format: +[country code][number] (e.g., +12125551234)
+Note: This tests pattern validation which is stricter than a generic "phone" format

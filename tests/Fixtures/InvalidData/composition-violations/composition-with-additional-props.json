@@ -1,6 +1,6 @@
 {
-  "petType": "dog",
-  "name": "Max",
-  "breed": "labrador",
-  "extraField": "not allowed"
+  "petType": "cat",
+  "name": "Mittens",
+  "indoor": true,
+  "color": "black"
 }
