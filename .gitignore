@@ -1,0 +1,22 @@
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Var directory (excludes its own .gitignore)
+/var/*
+!/var/.gitignore
+
+# Untracked directory for temporary files (excludes its own .gitignore)
+/untracked/*
+!/untracked/.gitignore

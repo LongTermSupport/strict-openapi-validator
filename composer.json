@@ -1,0 +1,44 @@
+{
+    "name": "lts/strict-openapi-validator",
+    "description": "High-performance, strict OpenAPI validator for PHP 8.4+ with LLM-optimized error output",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "openapi",
+        "validator",
+        "api",
+        "strict",
+        "php84",
+        "llm",
+        "high-performance"
+    ],
+    "authors": [
+        {
+            "name": "LongTermSupport",
+            "homepage": "https://github.com/LongTermSupport"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "lts/php-qa-ci": "dev-php8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "LongTermSupport\\StrictOpenApiValidator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LongTermSupport\\StrictOpenApiValidator\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    }
+}
