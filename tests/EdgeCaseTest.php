@@ -64,7 +64,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testNullableFields');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -87,7 +87,7 @@ JSON;
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('requiredNonNullable');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testNullableFields');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -112,7 +112,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testNullableFields');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -136,7 +136,7 @@ JSON;
         $this->expectException(TypeMismatchException::class);
         $this->expectExceptionMessage('optionalNonNullable');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testNullableFields');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     // ========================================
@@ -162,7 +162,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -184,7 +184,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('emptyStringNotAllowed');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -206,7 +206,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -228,7 +228,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('emptyArrayNotAllowed');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -250,7 +250,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -272,7 +272,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('emptyObjectNotAllowed');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     // ========================================
@@ -298,7 +298,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -320,7 +320,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -342,7 +342,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('exclusiveMinimum');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -364,7 +364,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('exclusiveMaximum');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -386,7 +386,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -408,7 +408,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -430,7 +430,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -452,7 +452,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -474,7 +474,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -496,7 +496,7 @@ JSON;
         $this->expectException(BoundaryViolationException::class);
         $this->expectExceptionMessage('uniqueItems');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     // ========================================
@@ -556,7 +556,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testBoundaries');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -580,7 +580,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testEmptyValues');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     // ========================================
@@ -606,7 +606,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -628,7 +628,7 @@ JSON;
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('anchoredPattern');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -650,7 +650,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -672,7 +672,7 @@ JSON;
         $this->expectException(PatternViolationException::class);
         $this->expectExceptionMessage('emptyStringPattern');
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -694,7 +694,7 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 
     /**
@@ -718,6 +718,6 @@ JSON;
         // Currently throws LogicException - will pass when implemented
         $this->expectException(\LogicException::class);
 
-        Validator::validateRequest($json, $this->edgeCasesSpec, 'testPatterns');
+        Validator::validateRequest($json, $this->edgeCasesSpec);
     }
 }
