@@ -50,13 +50,14 @@ final readonly class TypeValidator
                     }
                 }
                 $typeList = \implode(' or ', $typeStrings);
+                $receivedType = self::getJsonSchemaTypeName($data);
                 $errors->addError(new ValidationError(
                     path: $path,
                     specReference: '#/schema/type',
                     constraint: 'type',
                     expectedValue: $typeList,
-                    receivedValue: \get_debug_type($data),
-                    reason: \sprintf('Expected type %s, got %s', $typeList, \get_debug_type($data)),
+                    receivedValue: $receivedType,
+                    reason: \sprintf('Expected type %s, got %s', $typeList, $receivedType),
                     hint: null
                 ));
             }
@@ -69,13 +70,14 @@ final readonly class TypeValidator
         }
 
         if (!self::matchesType($data, $expectedType)) {
+            $receivedType = self::getJsonSchemaTypeName($data);
             $errors->addError(new ValidationError(
                 path: $path,
                 specReference: '#/schema/type',
                 constraint: 'type',
                 expectedValue: $expectedType,
-                receivedValue: \get_debug_type($data),
-                reason: \sprintf('Expected type %s, got %s', $expectedType, \get_debug_type($data)),
+                receivedValue: $receivedType,
+                reason: \sprintf('Expected type %s, got %s', $expectedType, $receivedType),
                 hint: self::getTypeHint($data, $expectedType)
             ));
         }
@@ -97,6 +99,26 @@ final readonly class TypeValidator
             'object' => $data instanceof \stdClass,
             'null' => null === $data,
             default => false,
+        };
+    }
+
+    /**
+     * Get JSON Schema type name from PHP value.
+     *
+     * Converts PHP debug types to JSON Schema type names for error messages.
+     * PHP uses "bool" and "int", but JSON Schema uses "boolean" and "integer".
+     */
+    private static function getJsonSchemaTypeName(mixed $data): string
+    {
+        return match (true) {
+            \is_bool($data) => 'boolean',
+            \is_int($data) => 'integer',
+            \is_float($data) => 'number',
+            \is_string($data) => 'string',
+            \is_array($data) => 'array',
+            $data instanceof \stdClass => 'object',
+            null === $data => 'null',
+            default => \get_debug_type($data),
         };
     }
 
