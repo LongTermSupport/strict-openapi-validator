@@ -83,12 +83,16 @@ final readonly class Spec
     /**
      * @param array<string, mixed> $spec The OpenAPI specification array
      * @param string $sourceFile The source file path (for error reporting)
+     * @param ValidationMode $mode Validation mode controlling strictness
      */
     private function __construct(
         private array $spec,
         private string $sourceFile,
+        private ValidationMode $mode = ValidationMode::Both,
     ) {
-        $this->validateSpec();
+        if ($this->mode->shouldValidateSpec()) {
+            $this->validateSpec();
+        }
     }
 
     /**
@@ -97,13 +101,14 @@ final readonly class Spec
      * Supports JSON and YAML files (though YAML is not yet implemented).
      *
      * @param string $path Path to the OpenAPI specification file
+     * @param ValidationMode $mode Validation mode (Client skips spec validation)
      *
      * @return self
      *
      * @throws InvalidArgumentException If file doesn't exist or is invalid
      * @throws LogicException If YAML file provided (not yet implemented)
      */
-    public static function createFromFile(string $path): self
+    public static function createFromFile(string $path, ValidationMode $mode = ValidationMode::Both): self
     {
         if (!\file_exists($path)) {
             throw new InvalidArgumentException(\sprintf('File not found: %s', $path));
@@ -133,19 +138,25 @@ final readonly class Spec
         /** @var array<string, mixed> $spec */
         $spec = json_decode($content, true);
 
-        return new self($spec, $path);
+        return new self($spec, $path, $mode);
     }
 
     /**
      * Create a Spec instance from an array.
      *
      * @param array<string, mixed> $spec The OpenAPI specification as an array
+     * @param ValidationMode $mode Validation mode (Client skips spec validation)
      *
      * @return self
      */
-    public static function createFromArray(array $spec): self
+    public static function createFromArray(array $spec, ValidationMode $mode = ValidationMode::Both): self
     {
-        return new self($spec, '<array>');
+        return new self($spec, '<array>', $mode);
+    }
+
+    public function getMode(): ValidationMode
+    {
+        return $this->mode;
     }
 
     /**

@@ -4,7 +4,7 @@ Ultra-strict OpenAPI request/response validator for PHP 8.4+ with LLM-optimized 
 
 ## Purpose
 
-Designed for **development environments** to catch API contract violations. Enforces absolute adherence to OpenAPI specifications - rejecting anything remotely invalid. Collects **all validation errors** before throwing to provide complete failure context.
+Designed to catch API contract violations. Enforces absolute adherence to OpenAPI specifications - rejecting anything remotely invalid. Collects **all validation errors** before throwing to provide complete failure context.
 
 ## Core Philosophy
 
@@ -21,19 +21,68 @@ Designed for **development environments** to catch API contract violations. Enfo
 ## Installation
 
 ```bash
-composer require lts/strict-openapi-validator --dev
+composer require lts/strict-openapi-validator
+```
+
+## Validation Modes
+
+Three modes control what gets validated and how strictly:
+
+### Client Mode
+
+For **consuming third-party APIs** where you don't control the spec quality.
+
+- **Requests**: Validated strictly with errors thrown (catch your mistakes before sending)
+- **Responses**: Validated with warnings only (log, don't throw - the API may return unexpected data)
+- **Spec structure**: NOT validated (third-party specs are often sloppy)
+
+```php
+use LongTermSupport\StrictOpenApiValidator\Spec;
+use LongTermSupport\StrictOpenApiValidator\ValidationMode;
+
+$spec = Spec::createFromFile('/path/to/third-party-api.json', ValidationMode::Client);
+```
+
+### Server Mode
+
+For **APIs you own** where you want to enforce spec quality.
+
+- **Responses**: Validated strictly with errors thrown
+- **Spec structure**: Validated strictly
+- **Requests**: Validated with a view to generating helpful, public-safe error messages
+
+```php
+$spec = Spec::createFromFile('/path/to/your-api.json', ValidationMode::Server);
+```
+
+### Both Mode (default)
+
+Full strict validation on everything - spec, requests, and responses all throw on error.
+
+```php
+// Default - validates everything strictly
+$spec = Spec::createFromFile('/path/to/openapi.json');
+
+// Explicit
+$spec = Spec::createFromFile('/path/to/openapi.json', ValidationMode::Both);
 ```
 
 ## API
 
-### Spec Validation
+### Spec Loading
 
 ```php
 use LongTermSupport\StrictOpenApiValidator\Spec;
+use LongTermSupport\StrictOpenApiValidator\ValidationMode;
 
-// Validates the spec file is complete and valid on creation
-// Throws if spec is invalid
-$spec = Spec::createFromFile('/path/to/openapi.yml');
+// Full strict validation (default - Both mode)
+$spec = Spec::createFromFile('/path/to/openapi.json');
+
+// Client mode - skip spec structure validation
+$spec = Spec::createFromFile('/path/to/openapi.json', ValidationMode::Client);
+
+// From array
+$spec = Spec::createFromArray($specArray, ValidationMode::Client);
 ```
 
 ### JSON String Validation
@@ -41,9 +90,11 @@ $spec = Spec::createFromFile('/path/to/openapi.yml');
 ```php
 use LongTermSupport\StrictOpenApiValidator\Validator;
 
-// Throws on failure, void on success
-Validator::validateRequest(string $json, Spec $spec): void
-Validator::validateResponse(string $json, Spec $spec): void
+// Validate request body against spec for specific path/method
+Validator::validateRequest(string $json, Spec $spec, string $path, string $method): void;
+
+// Validate response body
+Validator::validateResponse(string $json, Spec $spec, string $path, string $method, int $statusCode): void;
 ```
 
 ### Symfony Request/Response Validation
@@ -53,9 +104,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 // Middleware-style validation
-// Handles JSON extraction internally
-// Throws on failure, void on success
-Validator::validate(Request|Response $item, Spec $spec): void
+Validator::validate(Request $request, Spec $spec): void;
+Validator::validateSymfonyResponse(Response $response, Spec $spec, string $path, string $method): void;
 ```
 
 ## Error Output
