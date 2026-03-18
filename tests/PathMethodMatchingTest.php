@@ -7,6 +7,7 @@ namespace LongTermSupport\StrictOpenApiValidator\Tests;
 use LongTermSupport\StrictOpenApiValidator\Exception\InvalidRequestPathException;
 use LongTermSupport\StrictOpenApiValidator\Exception\InvalidResponseStatusException;
 use LongTermSupport\StrictOpenApiValidator\Spec;
+use LongTermSupport\StrictOpenApiValidator\ValidationMode;
 use LongTermSupport\StrictOpenApiValidator\Validator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -300,6 +301,179 @@ final class PathMethodMatchingTest extends TestCase
         Validator::validateResponse($validJson, $spec, '/users', 'get', 500);
 
         self::assertTrue(true); // If we get here, validation passed
+    }
+
+    #[Test]
+    public function itResolvesRefOnRequestBody(): void
+    {
+        $specArray = [
+            'openapi' => '3.1.0',
+            'info' => [
+                'title' => 'Test API',
+                'version' => '1.0.0',
+            ],
+            'paths' => [
+                '/agents/{agentId}' => [
+                    'patch' => [
+                        'parameters' => [
+                            [
+                                'name' => 'agentId',
+                                'in' => 'path',
+                                'required' => true,
+                                'schema' => ['type' => 'string'],
+                            ],
+                        ],
+                        'requestBody' => [
+                            '$ref' => '#/components/requestBodies/updateAgent',
+                        ],
+                        'responses' => [
+                            '200' => [
+                                'description' => 'Updated',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'components' => [
+                'requestBodies' => [
+                    'updateAgent' => [
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'firstName' => ['type' => 'string'],
+                                        'lastName' => ['type' => 'string'],
+                                    ],
+                                    'required' => ['firstName'],
+                                    'additionalProperties' => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $spec = Spec::createFromArray($specArray);
+        $validJson = '{"firstName":"John","lastName":"Doe"}';
+
+        // Should resolve $ref and validate against the referenced requestBody
+        Validator::validateRequest($validJson, $spec, '/agents/{agentId}', 'patch');
+
+        self::assertTrue(true);
+    }
+
+    #[Test]
+    public function itResolvesRefOnRequestBodyWithPathParameterMatching(): void
+    {
+        $specArray = [
+            'openapi' => '3.1.0',
+            'info' => [
+                'title' => 'Test API',
+                'version' => '1.0.0',
+            ],
+            'paths' => [
+                '/agents/{agentId}' => [
+                    'patch' => [
+                        'parameters' => [
+                            [
+                                'name' => 'agentId',
+                                'in' => 'path',
+                                'required' => true,
+                                'schema' => ['type' => 'string'],
+                            ],
+                        ],
+                        'requestBody' => [
+                            '$ref' => '#/components/requestBodies/updateAgent',
+                        ],
+                        'responses' => [
+                            '200' => [
+                                'description' => 'Updated',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'components' => [
+                'requestBodies' => [
+                    'updateAgent' => [
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'firstName' => ['type' => 'string'],
+                                    ],
+                                    'required' => ['firstName'],
+                                    'additionalProperties' => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $spec = Spec::createFromArray($specArray);
+        $validJson = '{"firstName":"John"}';
+
+        // Should resolve $ref even when matching via path parameters
+        Validator::validateRequest($validJson, $spec, '/agents/999', 'patch');
+
+        self::assertTrue(true);
+    }
+
+    #[Test]
+    public function itResolvesRefOnResponse(): void
+    {
+        $specArray = [
+            'openapi' => '3.1.0',
+            'info' => [
+                'title' => 'Test API',
+                'version' => '1.0.0',
+            ],
+            'paths' => [
+                '/agents' => [
+                    'get' => [
+                        'responses' => [
+                            '200' => [
+                                '$ref' => '#/components/responses/agentList',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'components' => [
+                'responses' => [
+                    'agentList' => [
+                        'description' => 'Agent list',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'data' => [
+                                            'type' => 'array',
+                                            'items' => ['type' => 'object'],
+                                        ],
+                                    ],
+                                    'required' => ['data'],
+                                    'additionalProperties' => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $spec = Spec::createFromArray($specArray, ValidationMode::Client);
+        $validJson = '{"data":[]}';
+
+        Validator::validateResponse($validJson, $spec, '/agents', 'get', 200);
+
+        self::assertTrue(true);
     }
 
     #[Test]

@@ -367,7 +367,7 @@ final readonly class Validator
             if (\is_array($pathItem) && isset($pathItem[$method])) {
                 $operation = $pathItem[$method];
                 if (\is_array($operation)) {
-                    $schema = self::extractRequestBodySchema($operation);
+                    $schema = self::extractRequestBodySchema($operation, $specArray);
                     if ([] !== $schema) {
                         return $schema;
                     }
@@ -386,7 +386,7 @@ final readonly class Validator
                 if (isset($pathItem[$method])) {
                     $operation = $pathItem[$method];
                     if (\is_array($operation)) {
-                        $schema = self::extractRequestBodySchema($operation);
+                        $schema = self::extractRequestBodySchema($operation, $specArray);
                         if ([] !== $schema) {
                             return $schema;
                         }
@@ -451,7 +451,7 @@ final readonly class Validator
             if (\is_array($pathItem) && isset($pathItem[$method])) {
                 $operation = $pathItem[$method];
                 if (\is_array($operation)) {
-                    $schema = self::extractResponseSchema($operation, $statusCodeStr);
+                    $schema = self::extractResponseSchema($operation, $statusCodeStr, $specArray);
                     if ([] !== $schema) {
                         return $schema;
                     }
@@ -470,7 +470,7 @@ final readonly class Validator
                 if (isset($pathItem[$method])) {
                     $operation = $pathItem[$method];
                     if (\is_array($operation)) {
-                        $schema = self::extractResponseSchema($operation, $statusCodeStr);
+                        $schema = self::extractResponseSchema($operation, $statusCodeStr, $specArray);
                         if ([] !== $schema) {
                             return $schema;
                         }
@@ -498,16 +498,23 @@ final readonly class Validator
      * Extract request body schema from operation.
      *
      * @param array<string, mixed> $operation Operation object from spec
+     * @param array<string, mixed> $specArray Full spec array for resolving $ref
      *
      * @return array<string, mixed>
      */
-    private static function extractRequestBodySchema(array $operation): array
+    private static function extractRequestBodySchema(array $operation, array $specArray = []): array
     {
         if (!isset($operation['requestBody']) || !\is_array($operation['requestBody'])) {
             return [];
         }
 
         $requestBody = $operation['requestBody'];
+
+        // Resolve $ref on requestBody (e.g. {"$ref": "#/components/requestBodies/..."})
+        if (isset($requestBody['$ref']) && \is_string($requestBody['$ref']) && [] !== $specArray) {
+            $requestBody = self::resolveJsonPointer($requestBody['$ref'], $specArray);
+        }
+
         if (!isset($requestBody['content']) || !\is_array($requestBody['content'])) {
             return [];
         }
@@ -532,10 +539,11 @@ final readonly class Validator
      *
      * @param array<string, mixed> $operation Operation object from spec
      * @param string $statusCode Status code as string (e.g., "200", "404")
+     * @param array<string, mixed> $specArray Full spec array for resolving $ref
      *
      * @return array<string, mixed>
      */
-    private static function extractResponseSchema(array $operation, string $statusCode): array
+    private static function extractResponseSchema(array $operation, string $statusCode, array $specArray = []): array
     {
         if (!isset($operation['responses']) || !\is_array($operation['responses'])) {
             return [];
@@ -546,6 +554,10 @@ final readonly class Validator
         // Try exact status code match first
         if (isset($responses[$statusCode]) && \is_array($responses[$statusCode])) {
             $response = $responses[$statusCode];
+            // Resolve $ref on response (e.g. {"$ref": "#/components/responses/..."})
+            if (isset($response['$ref']) && \is_string($response['$ref']) && [] !== $specArray) {
+                $response = self::resolveJsonPointer($response['$ref'], $specArray);
+            }
             $schema = self::extractSchemaFromResponse($response);
             if ([] !== $schema) {
                 return $schema;
@@ -555,6 +567,9 @@ final readonly class Validator
         // Try 'default' response as fallback
         if (isset($responses['default']) && \is_array($responses['default'])) {
             $response = $responses['default'];
+            if (isset($response['$ref']) && \is_string($response['$ref']) && [] !== $specArray) {
+                $response = self::resolveJsonPointer($response['$ref'], $specArray);
+            }
             $schema = self::extractSchemaFromResponse($response);
             if ([] !== $schema) {
                 return $schema;
@@ -625,6 +640,39 @@ final readonly class Validator
         $pattern = '/^' . $pattern . '$/';
 
         return 1 === \preg_match($pattern, $path);
+    }
+
+    /**
+     * Resolve a JSON Pointer ($ref) against the spec array.
+     *
+     * Handles references like "#/components/requestBodies/myBody" or
+     * "#/components/responses/NotFound" by traversing the spec tree.
+     *
+     * @param string $ref JSON Pointer (e.g. "#/components/requestBodies/updateAgent")
+     * @param array<string, mixed> $spec Full OpenAPI spec array
+     *
+     * @return array<string, mixed> Resolved value, or empty array if unresolvable
+     */
+    private static function resolveJsonPointer(string $ref, array $spec): array
+    {
+        if (!\str_starts_with($ref, '#/')) {
+            return [];
+        }
+
+        $pointer = \substr($ref, 2);
+        $parts = \explode('/', $pointer);
+
+        $current = $spec;
+        foreach ($parts as $part) {
+            // JSON Pointer escaping: ~1 → /, ~0 → ~
+            $part = \str_replace(['~1', '~0'], ['/', '~'], $part);
+            if (!\is_array($current) || !\array_key_exists($part, $current)) {
+                return [];
+            }
+            $current = $current[$part];
+        }
+
+        return \is_array($current) ? $current : [];
     }
 
     /**
