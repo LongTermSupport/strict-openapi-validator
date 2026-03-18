@@ -96,6 +96,96 @@ final readonly class Spec
     }
 
     /**
+     * Create a Spec with all internal $ref pointers resolved.
+     *
+     * @param array<string, mixed> $spec       Raw spec array
+     * @param string               $sourceFile Source file for error reporting
+     * @param ValidationMode       $mode       Validation mode
+     */
+    private static function createResolved(array $spec, string $sourceFile, ValidationMode $mode): self
+    {
+        $resolved = self::resolveInternalRefs($spec, $spec);
+
+        return new self($resolved, $sourceFile, $mode);
+    }
+
+    /**
+     * Recursively resolve all internal $ref pointers (starting with #/).
+     *
+     * When an object contains "$ref": "#/some/path", the entire object is
+     * replaced with the resolved target. External file refs (e.g. ./Other.json#/...)
+     * are left untouched since we can't resolve them without loading other files.
+     *
+     * @param array<string, mixed> $data   The current node in the spec tree
+     * @param array<string, mixed> $root   The full spec (for resolving pointers)
+     * @param int                  $depth  Recursion depth guard
+     *
+     * @return array<string, mixed>
+     */
+    private static function resolveInternalRefs(array $data, array $root, int $depth = 0): array
+    {
+        // Guard against circular refs
+        if ($depth > 50) {
+            return $data;
+        }
+
+        // If this node IS a $ref, resolve it and replace the entire node
+        if (isset($data['$ref']) && \is_string($data['$ref']) && \str_starts_with($data['$ref'], '#/')) {
+            $resolved = self::resolveJsonPointer($data['$ref'], $root);
+            if (null !== $resolved) {
+                // Recursively resolve refs in the resolved content
+                return self::resolveInternalRefs($resolved, $root, $depth + 1);
+            }
+
+            // Unresolvable internal ref - return as-is
+            return $data;
+        }
+
+        // Recursively resolve refs in child arrays
+        foreach ($data as $key => $value) {
+            if (\is_array($value)) {
+                $data[$key] = self::resolveInternalRefs($value, $root, $depth + 1);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Resolve a JSON Pointer (RFC 6901) against the spec root.
+     *
+     * Handles pointers like:
+     *   #/components/requestBodies/addAgentInputStream
+     *   #/components/responses/userResponse
+     *   #/components/schemas/Address
+     *
+     * @param string               $ref  JSON pointer (e.g. "#/components/schemas/User")
+     * @param array<string, mixed> $root Full OpenAPI spec
+     *
+     * @return array<string, mixed>|null Resolved value, or null if not found
+     */
+    private static function resolveJsonPointer(string $ref, array $root): ?array
+    {
+        // Remove leading #/
+        $pointer = \substr($ref, 2);
+        $parts = \explode('/', $pointer);
+
+        $current = $root;
+        foreach ($parts as $part) {
+            // JSON Pointer escaping (RFC 6901): ~1 = /, ~0 = ~
+            $part = \str_replace(['~1', '~0'], ['/', '~'], $part);
+
+            if (!\is_array($current) || !isset($current[$part])) {
+                return null;
+            }
+
+            $current = $current[$part];
+        }
+
+        return \is_array($current) ? $current : null;
+    }
+
+    /**
      * Create a Spec instance from a file.
      *
      * Supports JSON and YAML files (though YAML is not yet implemented).
@@ -138,7 +228,7 @@ final readonly class Spec
         /** @var array<string, mixed> $spec */
         $spec = json_decode($content, true);
 
-        return new self($spec, $path, $mode);
+        return self::createResolved($spec, $path, $mode);
     }
 
     /**
@@ -151,7 +241,7 @@ final readonly class Spec
      */
     public static function createFromArray(array $spec, ValidationMode $mode = ValidationMode::Both): self
     {
-        return new self($spec, '<array>', $mode);
+        return self::createResolved($spec, '<array>', $mode);
     }
 
     public function getMode(): ValidationMode

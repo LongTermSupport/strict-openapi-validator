@@ -34,7 +34,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LongTermSupport\\StrictOpenApiValidator\\Tests\\": "tests/"
+            "LongTermSupport\\StrictOpenApiValidator\\Tests\\": "tests/",
+            "QaConfig\\": [
+                "qaConfig/"
+            ]
         }
     },
     "minimum-stability": "dev",
