@@ -1,5 +1,7 @@
 # Strict OpenAPI Validator
 
+[![Packagist](https://img.shields.io/packagist/v/lts/strict-openapi-validator.svg)](https://packagist.org/packages/lts/strict-openapi-validator)
+
 Ultra-strict OpenAPI request/response validator for PHP 8.4+ with LLM-optimized error output.
 
 ## Purpose
