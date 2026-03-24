@@ -45,6 +45,7 @@ final readonly class FormatValidator
         };
 
         if (!$isValid) {
+            /** @var string $format */
             $formatHint = self::getFormatHint($format);
             $errors->addError(new ValidationError(
                 path: $path,

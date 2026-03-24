@@ -144,6 +144,7 @@ final readonly class Spec
         // Recursively resolve refs in child arrays
         foreach ($data as $key => $value) {
             if (\is_array($value)) {
+                /** @var array<string, mixed> $value */
                 $data[$key] = self::resolveInternalRefs($value, $root, $depth + 1);
             }
         }
@@ -182,7 +183,12 @@ final readonly class Spec
             $current = $current[$part];
         }
 
-        return \is_array($current) ? $current : null;
+        if (!\is_array($current)) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $current */
+        return $current;
     }
 
     /**
@@ -290,7 +296,9 @@ final readonly class Spec
 
         // Validate paths (if present)
         if (isset($this->spec['paths']) && \is_array($this->spec['paths'])) {
-            $this->validatePaths($this->spec['paths'], $errors);
+            /** @var array<string, mixed> $paths */
+            $paths = $this->spec['paths'];
+            $this->validatePaths($paths, $errors);
         }
 
         // Check that spec is not completely empty
@@ -482,10 +490,6 @@ final readonly class Spec
         $operationIds = [];
 
         foreach ($paths as $path => $pathItem) {
-            if (!\is_string($path)) {
-                continue;
-            }
-
             // Validate path format
             if (!\str_starts_with($path, '/')) {
                 $errors[] = new ValidationError(
@@ -649,7 +653,9 @@ final readonly class Spec
                             continue;
                         }
                         if (isset($mediaTypeObj['schema']) && \is_array($mediaTypeObj['schema'])) {
-                            $this->validateSchema($mediaTypeObj['schema'], "$.paths[{$path}].{$method}.requestBody.content[{$mediaType}].schema", $errors);
+                            /** @var array<string, mixed> $reqSchema */
+                            $reqSchema = $mediaTypeObj['schema'];
+                            $this->validateSchema($reqSchema, "$.paths[{$path}].{$method}.requestBody.content[{$mediaType}].schema", $errors);
                         }
                     }
                 }
@@ -668,7 +674,9 @@ final readonly class Spec
                             continue;
                         }
                         if (isset($mediaTypeObj['schema']) && \is_array($mediaTypeObj['schema'])) {
-                            $this->validateSchema($mediaTypeObj['schema'], "$.paths[{$path}].{$method}.responses[{$statusCode}].content[{$mediaType}].schema", $errors);
+                            /** @var array<string, mixed> $respSchema */
+                            $respSchema = $mediaTypeObj['schema'];
+                            $this->validateSchema($respSchema, "$.paths[{$path}].{$method}.responses[{$statusCode}].content[{$mediaType}].schema", $errors);
                         }
                     }
                 }
@@ -680,6 +688,7 @@ final readonly class Spec
             && isset($this->spec['components']['schemas']) && \is_array($this->spec['components']['schemas'])) {
             foreach ($this->spec['components']['schemas'] as $schemaName => $schema) {
                 if (\is_array($schema)) {
+                    /** @var array<string, mixed> $schema */
                     $this->validateSchema($schema, "$.components.schemas[{$schemaName}]", $errors);
                 }
             }
@@ -783,17 +792,22 @@ final readonly class Spec
         if (isset($schema['properties']) && \is_array($schema['properties'])) {
             foreach ($schema['properties'] as $propName => $propSchema) {
                 if (\is_array($propSchema)) {
+                    /** @var array<string, mixed> $propSchema */
                     $this->validateSchema($propSchema, "{$path}.properties[{$propName}]", $errors);
                 }
             }
         }
 
         if (isset($schema['items']) && \is_array($schema['items'])) {
-            $this->validateSchema($schema['items'], "{$path}.items", $errors);
+            /** @var array<string, mixed> $itemsSchema */
+            $itemsSchema = $schema['items'];
+            $this->validateSchema($itemsSchema, "{$path}.items", $errors);
         }
 
         if (isset($schema['additionalProperties']) && \is_array($schema['additionalProperties'])) {
-            $this->validateSchema($schema['additionalProperties'], "{$path}.additionalProperties", $errors);
+            /** @var array<string, mixed> $additionalPropertiesSchema */
+            $additionalPropertiesSchema = $schema['additionalProperties'];
+            $this->validateSchema($additionalPropertiesSchema, "{$path}.additionalProperties", $errors);
         }
     }
 

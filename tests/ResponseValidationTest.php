@@ -62,8 +62,10 @@ final class ResponseValidationTest extends TestCase
         }
 
         // Try with -response suffix
-        $pathParts = \pathinfo($path);
-        $responsePathAlt = $pathParts['dirname'] . '/' . $pathParts['filename'] . '-response.' . $pathParts['extension'];
+        $pathDirname = \pathinfo($path, PATHINFO_DIRNAME);
+        $pathFilename = \pathinfo($path, PATHINFO_FILENAME);
+        $pathExtension = \pathinfo($path, PATHINFO_EXTENSION);
+        $responsePathAlt = $pathDirname . '/' . $pathFilename . '-response.' . $pathExtension;
         $responseFixtureAlt = __DIR__ . $responsePathAlt;
 
         if (\file_exists($responseFixtureAlt)) {

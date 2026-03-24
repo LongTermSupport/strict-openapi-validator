@@ -66,7 +66,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should not throw - valid request for POST /users
         Validator::validateRequest($validJson, $spec, '/users', 'post');
 
-        self::assertTrue(true); // If we get here, validation passed
+        $this->addToAssertionCount(1); // If we get here, validation passed
     }
 
     #[Test]
@@ -118,7 +118,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should not throw - valid response for GET /users/{id} with 200 status
         Validator::validateResponse($validJson, $spec, '/users/123', 'get', 200);
 
-        self::assertTrue(true); // If we get here, validation passed
+        $this->addToAssertionCount(1); // If we get here, validation passed
     }
 
     #[Test]
@@ -257,7 +257,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should match /users/{id} with /users/456
         Validator::validateResponse($validJson, $spec, '/users/456', 'get', 200);
 
-        self::assertTrue(true); // If we get here, validation passed
+        $this->addToAssertionCount(1); // If we get here, validation passed
     }
 
     #[Test]
@@ -300,7 +300,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should use 'default' response when specific status not found
         Validator::validateResponse($validJson, $spec, '/users', 'get', 500);
 
-        self::assertTrue(true); // If we get here, validation passed
+        $this->addToAssertionCount(1); // If we get here, validation passed
     }
 
     #[Test]
@@ -361,7 +361,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should resolve $ref and validate against the referenced requestBody
         Validator::validateRequest($validJson, $spec, '/agents/{agentId}', 'patch');
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -421,7 +421,7 @@ final class PathMethodMatchingTest extends TestCase
         // Should resolve $ref even when matching via path parameters
         Validator::validateRequest($validJson, $spec, '/agents/999', 'patch');
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -473,7 +473,7 @@ final class PathMethodMatchingTest extends TestCase
 
         Validator::validateResponse($validJson, $spec, '/agents', 'get', 200);
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -518,6 +518,6 @@ final class PathMethodMatchingTest extends TestCase
         // Should use first schema found when path/method not provided
         Validator::validateRequest($validJson, $spec);
 
-        self::assertTrue(true); // If we get here, validation passed
+        $this->addToAssertionCount(1); // If we get here, validation passed
     }
 }

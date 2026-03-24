@@ -155,9 +155,6 @@ final readonly class Validator
 
         // Extract JSON body from request (empty string for GET requests)
         $json = $request->getContent();
-        if (false === $json) {
-            $json = '';
-        }
 
         // Handle empty content (GET requests, etc.)
         if ('' === $json) {
@@ -367,6 +364,7 @@ final readonly class Validator
             if (\is_array($pathItem) && isset($pathItem[$method])) {
                 $operation = $pathItem[$method];
                 if (\is_array($operation)) {
+                    /** @var array<string, mixed> $operation */
                     $schema = self::extractRequestBodySchema($operation, $specArray);
                     if ([] !== $schema) {
                         return $schema;
@@ -386,6 +384,7 @@ final readonly class Validator
                 if (isset($pathItem[$method])) {
                     $operation = $pathItem[$method];
                     if (\is_array($operation)) {
+                        /** @var array<string, mixed> $operation */
                         $schema = self::extractRequestBodySchema($operation, $specArray);
                         if ([] !== $schema) {
                             return $schema;
@@ -451,6 +450,7 @@ final readonly class Validator
             if (\is_array($pathItem) && isset($pathItem[$method])) {
                 $operation = $pathItem[$method];
                 if (\is_array($operation)) {
+                    /** @var array<string, mixed> $operation */
                     $schema = self::extractResponseSchema($operation, $statusCodeStr, $specArray);
                     if ([] !== $schema) {
                         return $schema;
@@ -470,6 +470,7 @@ final readonly class Validator
                 if (isset($pathItem[$method])) {
                     $operation = $pathItem[$method];
                     if (\is_array($operation)) {
+                        /** @var array<string, mixed> $operation */
                         $schema = self::extractResponseSchema($operation, $statusCodeStr, $specArray);
                         if ([] !== $schema) {
                             return $schema;
@@ -553,6 +554,7 @@ final readonly class Validator
 
         // Try exact status code match first
         if (isset($responses[$statusCode]) && \is_array($responses[$statusCode])) {
+            /** @var array<string, mixed> $response */
             $response = $responses[$statusCode];
             // Resolve $ref on response (e.g. {"$ref": "#/components/responses/..."})
             if (isset($response['$ref']) && \is_string($response['$ref']) && [] !== $specArray) {
@@ -566,6 +568,7 @@ final readonly class Validator
 
         // Try 'default' response as fallback
         if (isset($responses['default']) && \is_array($responses['default'])) {
+            /** @var array<string, mixed> $response */
             $response = $responses['default'];
             if (isset($response['$ref']) && \is_string($response['$ref']) && [] !== $specArray) {
                 $response = self::resolveJsonPointer($response['$ref'], $specArray);
@@ -672,7 +675,12 @@ final readonly class Validator
             $current = $current[$part];
         }
 
-        return \is_array($current) ? $current : [];
+        if (!\is_array($current)) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $current */
+        return $current;
     }
 
     /**

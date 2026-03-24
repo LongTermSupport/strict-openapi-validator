@@ -34,7 +34,7 @@ final class RefResolutionTest extends TestCase
         // Should NOT throw - the $ref to requestBodies should be resolved
         Validator::validateRequest($validJson, $spec, '/api/v1/agents', 'post');
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -61,7 +61,7 @@ final class RefResolutionTest extends TestCase
         // Should NOT throw - the $ref to requestBodies for PATCH should be resolved
         Validator::validateRequest($validJson, $spec, '/api/v1/agents/12345', 'patch');
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -86,7 +86,7 @@ final class RefResolutionTest extends TestCase
 
         Validator::validateResponse($validJson, $spec, '/api/v1/users/123', 'get', 200);
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -99,7 +99,7 @@ final class RefResolutionTest extends TestCase
 
         Validator::validateRequest($validJson, $spec, '/api/v1/users', 'post');
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -142,7 +142,7 @@ final class RefResolutionTest extends TestCase
         // Using backward-compatible mode (no path/method) should also resolve $ref
         Validator::validateRequest($validJson, $spec);
 
-        self::assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**

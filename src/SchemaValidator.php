@@ -68,7 +68,11 @@ final readonly class SchemaValidator
         // Nested object properties
         if ($data instanceof \stdClass && isset($schema['properties']) && \is_array($schema['properties'])) {
             foreach ($schema['properties'] as $propName => $propSchema) {
+                if (!\is_array($propSchema)) {
+                    continue;
+                }
                 if (\property_exists($data, $propName)) {
+                    /** @var array<string, mixed> $propSchema */
                     self::validate($data->$propName, $propSchema, "{$path}.{$propName}", $errors, $spec);
                 }
             }
@@ -76,8 +80,10 @@ final readonly class SchemaValidator
 
         // Array items
         if (\is_array($data) && isset($schema['items']) && \is_array($schema['items'])) {
+            /** @var array<string, mixed> $itemsSchema */
+            $itemsSchema = $schema['items'];
             foreach ($data as $index => $item) {
-                self::validate($item, $schema['items'], "{$path}[{$index}]", $errors, $spec);
+                self::validate($item, $itemsSchema, "{$path}[{$index}]", $errors, $spec);
             }
         }
 
@@ -382,7 +388,9 @@ final readonly class SchemaValidator
             $validValuesStr = \implode(', ', $validValues);
 
             // Provide helpful hint for common mistakes
-            $hint = self::getEnumHint($data, $schema['enum']);
+            /** @var array<int, mixed> $enumValues */
+            $enumValues = $schema['enum'];
+            $hint = self::getEnumHint($data, $enumValues);
 
             $errors->addError(new ValidationError(
                 path: $path,
@@ -418,10 +426,12 @@ final readonly class SchemaValidator
         }
 
         // Check for type mismatch with string representation
-        $dataStr = (string)$data;
-        foreach ($enumValues as $validValue) {
-            if (\is_string($validValue) && $validValue === $dataStr && !\is_string($data)) {
-                return "Did you mean \"{$validValue}\" (string)? Received " . \get_debug_type($data);
+        if (\is_scalar($data) || null === $data) {
+            $dataStr = (string) $data;
+            foreach ($enumValues as $validValue) {
+                if (\is_string($validValue) && $validValue === $dataStr && !\is_string($data)) {
+                    return "Did you mean \"{$validValue}\" (string)? Received " . \get_debug_type($data);
+                }
             }
         }
 
@@ -531,10 +541,6 @@ final readonly class SchemaValidator
         $suggestion = null;
 
         foreach ($allowed as $allowedProp) {
-            if (!\is_string($allowedProp)) {
-                continue;
-            }
-
             $distance = \levenshtein($actual, $allowedProp);
             if ($distance < $minDistance && $distance <= 2) {
                 $minDistance = $distance;
@@ -595,6 +601,7 @@ final readonly class SchemaValidator
                 $subSchema = self::resolveRef($subSchema['$ref'], $spec);
             }
 
+            /** @var array<string, mixed> $subSchema */
             // Create temporary error collector for this schema
             $schemaErrors = new ErrorCollector();
             self::validate($data, $subSchema, $path, $schemaErrors, $spec);
@@ -657,6 +664,7 @@ final readonly class SchemaValidator
                 $subSchema = self::resolveRef($subSchema['$ref'], $spec);
             }
 
+            /** @var array<string, mixed> $subSchema */
             // Create temporary error collector for this schema
             $schemaErrors = new ErrorCollector();
             self::validate($data, $subSchema, $path, $schemaErrors, $spec);
@@ -706,6 +714,7 @@ final readonly class SchemaValidator
                 $subSchema = self::resolveRef($subSchema['$ref'], $spec);
             }
 
+            /** @var array<string, mixed> $subSchema */
             // Validate against this schema (errors added directly to main collector)
             self::validate($data, $subSchema, $path, $errors, $spec);
         }
@@ -727,10 +736,12 @@ final readonly class SchemaValidator
         $discriminator = $schema['discriminator'];
 
         // Get discriminator property name
-        if (!isset($discriminator['propertyName']) || !\is_string($discriminator['propertyName'])) {
+        if (!\is_array($discriminator) || !isset($discriminator['propertyName']) || !\is_string($discriminator['propertyName'])) {
             return false;  // Invalid discriminator config - fall back to regular validation
         }
 
+        /** @var array<string, mixed> $discriminator */
+        /** @var string $propertyName */
         $propertyName = $discriminator['propertyName'];
 
         // Data must be an object with the discriminator property

@@ -63,7 +63,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/nullable', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -112,7 +112,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/nullable', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -163,7 +163,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/empty-values', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -208,7 +208,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/empty-values', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -253,7 +253,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/empty-values', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -302,7 +302,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -325,7 +325,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -392,7 +392,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -415,7 +415,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -438,7 +438,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -461,7 +461,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -484,7 +484,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -527,7 +527,7 @@ JSON;
     {
         // This test needs a simple-crud spec or we need to add an integer field to edge-cases
         // For now, let's mark this as requiring future implementation
-        $this->markTestSkipped('Requires integer field in edge-cases spec or separate fixture');
+        self::markTestSkipped('Requires integer field in edge-cases spec or separate fixture');
     }
 
     /**
@@ -542,7 +542,7 @@ JSON;
     #[Test]
     public function itRejectsFloatIntegerForInteger(): void
     {
-        $this->markTestSkipped('Requires integer field in edge-cases spec or separate fixture');
+        self::markTestSkipped('Requires integer field in edge-cases spec or separate fixture');
     }
 
     /**
@@ -567,7 +567,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/boundaries', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -592,7 +592,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/empty-values', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     // ========================================
@@ -619,7 +619,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/patterns', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -664,7 +664,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/patterns', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -709,7 +709,7 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/patterns', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -734,6 +734,6 @@ JSON;
         Validator::validateRequest($json, $this->edgeCasesSpec, '/edge-cases/patterns', 'post');
 
         // Assert test completed without exception
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 }

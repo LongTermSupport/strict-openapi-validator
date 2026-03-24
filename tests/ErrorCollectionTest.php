@@ -31,12 +31,10 @@ use PHPUnit\Framework\TestCase;
 final class ErrorCollectionTest extends TestCase
 {
     private Spec $strictSchemasSpec;
-    private Spec $compositionSpec;
 
     protected function setUp(): void
     {
         $this->strictSchemasSpec = Spec::createFromFile(__DIR__ . '/Fixtures/Specs/strict-schemas.json');
-        $this->compositionSpec = Spec::createFromFile(__DIR__ . '/Fixtures/Specs/composition-examples.json');
     }
 
     // ========================================
@@ -69,7 +67,6 @@ final class ErrorCollectionTest extends TestCase
 
             // Verify each error has all required fields
             foreach ($errors as $error) {
-                self::assertInstanceOf(ValidationError::class, $error);
                 self::assertNotEmpty($error->path, 'Error path should not be empty');
                 self::assertNotEmpty($error->constraint, 'Error constraint should not be empty');
                 self::assertNotEmpty($error->reason, 'Error reason should not be empty');
@@ -110,13 +107,12 @@ final class ErrorCollectionTest extends TestCase
 
             // Verify each error is complete
             foreach ($errors as $error) {
-                self::assertInstanceOf(ValidationError::class, $error);
                 self::assertNotEmpty($error->path);
                 self::assertNotEmpty($error->constraint);
                 self::assertNotEmpty($error->reason);
                 // expectedValue and receivedValue may be empty strings/null, but must exist
-                self::assertTrue(\property_exists($error, 'expectedValue'));
-                self::assertTrue(\property_exists($error, 'receivedValue'));
+                $this->addToAssertionCount(1); // expectedValue exists (compile-time guaranteed)
+                $this->addToAssertionCount(1); // receivedValue exists (compile-time guaranteed)
             }
         }
     }
@@ -238,15 +234,15 @@ final class ErrorCollectionTest extends TestCase
             self::assertNotEmpty($firstError->constraint, 'Error must have constraint type');
             self::assertNotEmpty($firstError->reason, 'Error must have reason (human explanation)');
 
-            // specReference may be empty for some errors, but property must exist
-            self::assertTrue(\property_exists($firstError, 'specReference'));
+            // specReference may be empty for some errors, but property must exist (compile-time guaranteed)
+            $this->addToAssertionCount(1);
 
-            // expectedValue and receivedValue must exist (may be null/empty)
-            self::assertTrue(\property_exists($firstError, 'expectedValue'));
-            self::assertTrue(\property_exists($firstError, 'receivedValue'));
+            // expectedValue and receivedValue must exist (compile-time guaranteed)
+            $this->addToAssertionCount(1);
+            $this->addToAssertionCount(1);
 
-            // hint is optional but property must exist
-            self::assertTrue(\property_exists($firstError, 'hint'));
+            // hint is optional but property must exist (compile-time guaranteed)
+            $this->addToAssertionCount(1);
 
             // Verify error message format
             $message = $e->getMessage();
@@ -595,7 +591,7 @@ final class ErrorCollectionTest extends TestCase
                 }
             } else {
                 // If no field has multiple errors, that's fine - just verify the data
-                self::assertTrue(true, 'No fields with multiple errors in this fixture');
+                $this->addToAssertionCount(1); // No fields with multiple errors in this fixture
             }
         }
     }
