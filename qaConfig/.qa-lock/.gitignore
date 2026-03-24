@@ -3,5 +3,4 @@
 *.lock
 .lock.*
 
-# Timing data SHOULD be tracked (negation)
-!timing-data.json
+timing-data.json
